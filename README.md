@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# STORE 🛒
 
-## Getting Started
+STORE é uma plataforma de varejo moderna, criada para oferecer uma experiência de compra online envolvente e eficiente. Com catálogo de produtos, gestão completa de produtos e acesso administrativo, o STORE entrega um design atraente e funcional, garantindo que o cliente tenha todas as informações necessárias para se encantar e realizar o “click”.
 
-First, run the development server:
+---
+
+## 🚀 Tecnologias e Ferramentas Utilizadas
+
+Este projeto foi desenvolvido utilizando tecnologias modernas e bibliotecas de ponta para garantir performance, escalabilidade e uma experiência fluida:
+
+- **Next.js** – Framework React para aplicações web rápidas e otimizadas.
+- **React** – Biblioteca principal para construção da interface.
+- **Tailwind CSS** – Para estilização rápida e responsiva.
+- **React Hook Form** – Gerenciamento eficiente de formulários.
+- **Zod** – Validação de dados e esquemas de formulários.
+- **ShadCN / Radix UI** – Componentes prontos e acessíveis para interface moderna.
+- **Framer Motion** – Animações fluidas e interativas.
+- **Lucide React** – Ícones leves e customizáveis.
+- **React Webcam** – Captura de imagens via webcam diretamente no navegador.
+- **TanStack Table** – Criação de tabelas dinâmicas com recursos avançados.
+- **React Hot Toast** – Notificações de feedback rápido e elegante.
+
+---
+
+## 🎨 Funcionalidades
+
+- **Catálogo de produtos:** Visualização de produtos com informações detalhadas.
+- **Gestão de produtos:** Adição, edição e remoção de produtos via painel administrativo.
+- **Controle de usuários:** Administradores podem gerenciar acessos e permissões de outros usuários.
+- **Design atrativo:** Layout moderno e responsivo, pensado para encantar o usuário.
+- **Feedback instantâneo:** Notificações em tempo real para ações de CRUD.
+- **Componentes interativos:** Tabelas, modais e animações com experiência fluida.
+
+---
+
+## 💻 Como rodar o projeto
+
+Clone o repositório e instale as dependências:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <SEU_REPO_URL>
+cd store
+npm install
+# ou
+yarn install
+# ou
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Composição da Equipe
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<div align="center"> <table width="100%"> <tr> <th colspan="2">Team of Programmers</th> </tr> <tr> <td align="center"> <img src="https://avatars.githubusercontent.com/u/123522640?v=4" width="70"/><br/> <a href="https://github.com/Felipe-Camargo12">Felipe Camargo</a><br/> Technical Lead </td> <td align="center"> <img src="https://avatars.githubusercontent.com/u/77246516?v=4" width="70"/><br/> <a href="https://github.com/gabrieldeoliveira04">Gabriel Oliveira</a><br/> Full Stack Engineer </td> </tr> </table> </div>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
+<p align="center"> <strong>Feltec Solutions</strong><br/> Tecnologia com propósito, inovação com resultado. </p>
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
