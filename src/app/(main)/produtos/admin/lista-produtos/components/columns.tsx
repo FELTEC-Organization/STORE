@@ -8,15 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 // 	return t(text);
 // }
 
-export interface ProductRow {
-  name: string;
-  price: number;
-  stock: number;
-  category: string;
-  action?: unknown;
-}
-
-export const getColumns = (onRefresh: () => void): ColumnDef<ProductRow>[] => [
+export const getColumns = (onRefresh: () => void): ColumnDef<any>[] => [
   // Seleção de linhas
   {
     id: "select",

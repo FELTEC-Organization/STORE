@@ -82,14 +82,10 @@ export function getWhatsAppUrl(product: Product, whatsappNumber: string): string
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
-export function debounce<T extends (...args: unknown[]) => void>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: ReturnType<typeof setTimeout>;
-
+export function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
+  let timer: NodeJS.Timeout;
   return (...args: Parameters<T>) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
   };
 }
