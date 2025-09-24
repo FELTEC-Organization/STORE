@@ -3,7 +3,7 @@
 import AuthLayout from "@/app/(auth)/password-renewal/components/authLayout";
 import AuthInput from "@/app/(auth)/login/components/authInput";
 import ErrorAlert from "@/app/(auth)/login/components/errorAlert";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -15,10 +15,18 @@ export default function PasswordRenewPage() {
 	const ERROR_DURATION = 4000;
 	const timeoutRef = useRef<number | null>(null);
 
-	// Função de renovação de senha (mock por enquanto)
-	const handleRenewPassword = () => {
-		// Aqui você pode colocar a chamada para o serviço de renovação de senha futuramente.
-		triggerError();
+	const [email, setEmail] = useState("");
+
+	// Função de envio de senha temporária (mock)
+	const handleSendTemporaryPassword = () => {
+		if (!email) {
+			triggerError();
+			return;
+		}
+
+		// Aqui você chamaria sua API real para enviar a senha temporária
+		alert(`Senha temporária enviada para ${email}`);
+		setEmail("");
 	};
 
 	// Função para exibir alerta de erro
@@ -36,24 +44,31 @@ export default function PasswordRenewPage() {
 	return (
 		<AuthLayout>
 			<div className="flex flex-col gap-6">
+				{/* Cabeçalho */}
 				<div className="mt-24">
-					<h1 className="text-nc-base-600 font-bold text-2xl">{("Title")}</h1>
+					<h1 className="text-nc-base-600 font-bold text-2xl">
+						Recuperar senha
+					</h1>
 					<span className="text-nc-base-800 font-semibold text-lg">
-						{("Subtitle")}
+						Informe seu email para receber uma senha temporária de acesso e recuperação de senha.
 					</span>
 				</div>
 
+				{/* Input */}
 				<div className="flex flex-col gap-4">
 					<h2 className="text-nc-neutral-900 font-medium text-base">
-						{("Instruction")}
+						Email de acesso
 					</h2>
 					<AuthInput
 						id="email"
-						label={("emailLabel")}
-						placeholder="Ex.: email@empresa.com.br"
+						label="Email"
+						placeholder="ex.: email@empresa.com.br"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
 					/>
 				</div>
 
+				{/* Alerta de erro */}
 				<ErrorAlert
 					visible={showError}
 					keyId={errorKey}
@@ -61,23 +76,24 @@ export default function PasswordRenewPage() {
 				/>
 			</div>
 
-			<div>
+			{/* Botões */}
+			<div className="mt-4">
 				<Button
-					onClick={handleRenewPassword}
-					variant="primary"
+					onClick={handleSendTemporaryPassword}
+					variant="sunset"
 					className="w-full"
 				>
-					{("RePassword")}
+					Enviar senha temporária
 				</Button>
 
 				<div className="flex items-center justify-center m-4">ou</div>
 
 				<Button
 					onClick={() => router.push("/login")}
-					variant="outline"
-					className="w-full bg-nc-neutral-50"
+					variant="adventure"
+					className="w-full"
 				>
-					{("Sign in")}
+					Voltar ao login
 				</Button>
 			</div>
 		</AuthLayout>

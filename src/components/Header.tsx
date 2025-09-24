@@ -12,6 +12,7 @@ import {
   ChevronDown,
   CircleUserRound,
   Slack,
+  Palette,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/use-theme";
@@ -49,6 +50,7 @@ export function Header() {
   const pathname = usePathname();
   const router = useRouter();
 
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const { user, handleExitUser } = useContext(AuthContext);
 
   const navigation = [
@@ -80,6 +82,21 @@ export function Header() {
     handleExitUser();
     router.push("/login");
   };
+
+  const handleChangeBaseColor = (color: string) => {
+    setSelectedColor(color);
+    localStorage.setItem("color-base", color);
+    document.documentElement.style.setProperty("--color-base", color);
+  };
+
+  useEffect(() => {
+    const savedColor = localStorage.getItem("color-base");
+    if (savedColor) {
+      handleChangeBaseColor(savedColor);
+    } else {
+      handleChangeBaseColor("#FE7F2D"); // fallback
+    }
+  }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
@@ -171,11 +188,10 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`relative px-3 py-2 text-sm font-medium transition-colors ${
-                  isActive(item.href)
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                className={`relative px-3 py-2 text-sm font-medium transition-colors ${isActive(item.href)
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+                  }`}
               >
                 {item.name}
                 {isActive(item.href) && (
@@ -218,6 +234,39 @@ export function Header() {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent className="rounded shadow-lg min-w-[var(--radix-dropdown-menu-trigger-width)]">
+                  <DropdownMenuLabel >
+                    Accessibilidade
+                  </DropdownMenuLabel>
+
+                  <span className="px-3 text-xs text-gray-300 flex gap-1">
+                    <Palette className="h-4 w-4" />
+                    Cor predominante
+                  </span>
+                  <div className="flex gap-2 px-3 py-2">
+                    {[
+                      { color: "#f7b801", label: ("Yellow") },
+                      { color: "#db504a", label: ("Jasper") },
+                      { color: "#7678ed", label: ("Slate blue") },
+                      { color: "#66cccc", label: ("Aqua green") },
+                      { color: "#339933", label: ("Green") },
+                      { color: "#FE7F2D", label: ("Sunset") },
+                    ].map(({ color, label }) => {
+                      const selected = selectedColor === color;
+                      return (
+                        <button
+                          key={color}
+                          onClick={() => handleChangeBaseColor(color)}
+                          className={`w-6 h-6 rounded-full border-2 transition 
+                        ${selected ? "ring-1 ring-white border-white" : "border-gray-400"}`}
+                          style={{ background: color }}
+                          title={label} // acessibilidade para leitor de tela
+                        />
+                      );
+                    })}
+                  </div>
+
+                  <DropdownMenuSeparator className=" border-nc-base-400" />
+
                   <DropdownMenuItem onClick={handleLogout}>
                     Logout
                   </DropdownMenuItem>
@@ -264,11 +313,10 @@ export function Header() {
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`block px-3 py-2 text-base font-medium rounded-md transition-colors ${
-                    isActive(item.href)
-                      ? "text-primary bg-primary/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  }`}
+                  className={`block px-3 py-2 text-base font-medium rounded-md transition-colors ${isActive(item.href)
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
                 >
                   {item.name}
                 </Link>

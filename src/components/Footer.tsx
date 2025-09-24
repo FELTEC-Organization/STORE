@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Instagram, MessageCircle, Facebook } from 'lucide-react';
+import { Instagram, MessageCircle, Facebook, Slack } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 
 export function Footer() {
@@ -14,13 +14,13 @@ export function Footer() {
 
   return (
     <footer className="bg-muted/50 border-t border-border/50">
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <div className="w-8 h-8 bg-gradient-hero rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">E</span>
+                <span className="text-white font-bold text-lg"><Slack/></span>
               </div>
               <span className="font-serif text-xl font-semibold text-foreground">
                 {siteConfig.name}
@@ -95,10 +95,11 @@ export function Footer() {
 
         <div className="border-t border-border/50 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-sm">
-            © {currentYear} {siteConfig.name}. Todos os direitos reservados.
+            © {currentYear} FELTEC. Todos os direitos reservados.
+            {/* © {currentYear} {siteConfig.name}. Todos os direitos reservados. */}
           </p>
           <p className="text-muted-foreground text-sm">
-            Desenvolvido com ❤️ para sua casa dos sonhos
+            Desenvolvido pela equipe FELTEC
           </p>
         </div>
       </div>

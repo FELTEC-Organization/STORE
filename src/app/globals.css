@@ -41,6 +41,10 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-sunset: var(--color-base); /* cor SUNSET */
+  --color-adventure: #233D4C; /* cor ADVENTURE */
+
+  --color-base:  #FE7F2D;
 }
 
 :root {

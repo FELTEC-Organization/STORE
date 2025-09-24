@@ -85,9 +85,7 @@ export default function Products() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="pt-16">
+      <main>
         {/* Page Header */}
         <section className="py-12 bg-gradient-subtle border-b border-border/50">
           <div className="container mx-auto px-4">
@@ -159,8 +157,6 @@ export default function Products() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

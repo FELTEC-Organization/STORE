@@ -24,10 +24,10 @@ export function Features() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground mb-6">
-            Lorem ipsum dolor?
+            Por que NovaTrend é o melhor ecommerce?
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Lorem ipsum dolor sit amet consectetur adipiscing elit
+            Fazemos nosso melhor para oferecer a você uma experiência de compra excepcional, com produtos de alta qualidade e atendimento dedicado.
           </p>
         </motion.div>
 

@@ -111,8 +111,8 @@ export default function LoginPage() {
       ) : (
         <>
           <div className="flex flex-col gap-6 text-foreground">
-            <div className="mt-24 text-center">
-              <h2 className="text-nc-base-800 dark:text-nc-base-200 font-semibold text-2xl">
+            <div className="my-24 text-left">
+              <h2 className="text-sunset font-semibold text-6xl">
                 Bem-vindo de volta!
               </h2>
               <h1 className="text-nc-base-600 dark:text-nc-base-400 font-bold ">
@@ -123,7 +123,7 @@ export default function LoginPage() {
 
             <div className="flex flex-col gap-4">
               <h2 className="text-nc-base-600 dark:text-nc-base-400 font-medium text-xl">
-                Enter data
+                Insira seus dados
               </h2>
               <AuthInput
                 id="email"
@@ -154,21 +154,21 @@ export default function LoginPage() {
             <Button
               type="submit"
               onClick={handleSubmit(handleLogin)}
-              variant="primary"
+              variant="sunset"
               className="w-full"
               disabled={!isValid}
             >
-              Sign in <ArrowRight />
+              Entrar <ArrowRight />
             </Button>
 
-            <div className="flex items-center justify-center m-4">Or</div>
+            <div className="flex items-center justify-center m-4">ou</div>
 
             <Button
               onClick={() => router.push("/password-renewal")}
-              variant="outline"
-              className="w-full bg-nc-pure-white dark:bg-nc-neutral-900"
+              variant="adventure"
+              className="w-full"
             >
-              Forgot password?
+              Esqueceu sua senha?
             </Button>
           </div>
         </>

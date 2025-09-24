@@ -1,106 +1,107 @@
 export const siteConfig = {
-  name: "Sua Loja",
-  description: "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor",
-  slogan: "Lorem ipsum dolor sit amet",
-  
+  name: "NovaTrend",
+  description: "A NovaTrend é um ecommerce moderno que une tecnologia, estilo e praticidade para oferecer a melhor experiência de compra online.",
+  slogan: "Seu estilo, sua tendência.",
+
   contact: {
-    address: "Lorem Ipsum, 123 - Centro, Cidade - UF",
-    phone: "+00 00 00000-0000",
-    whatsapp: "000000000000",
-    email: "contato@sualoja.com",
-    hours: "Segunda a Sexta: 9h às 18h"
+    address: "Av. das Nações, 1450 - Centro, Sorocaba - SP",
+    phone: "+55 (15) 3222-4455",
+    whatsapp: "5515999887766",
+    email: "contato@novatrend.com.br",
+    hours: "Segunda a Sexta: 9h às 18h | Sábado: 9h às 13h"
   },
-  
+
   social: {
-    instagram: "https://instagram.com/sualoja",
-    whatsapp: "https://wa.me/000000000000",
-    facebook: "https://facebook.com/sualoja", 
-    tiktok: "https://tiktok.com/@sualoja"
+    instagram: "https://instagram.com/novatrendstore",
+    whatsapp: "https://wa.me/5515999887766",
+    facebook: "https://facebook.com/novatrendstore",
+    tiktok: "https://tiktok.com/@novatrendstore"
   },
-  
+
   about: {
-    title: "Sobre Nós",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+    title: "Sobre a NovaTrend",
+    description:
+      "Fundada com o objetivo de transformar a forma como as pessoas compram online, a NovaTrend é uma loja virtual focada em estilo, inovação e praticidade. Nosso compromisso é oferecer produtos de qualidade com uma experiência de compra simples, rápida e segura."
   },
-  
+
   features: [
     {
-      title: "Lorem Ipsum",
-      description: "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod",
+      title: "Qualidade Garantida",
+      description: "Selecionamos apenas fornecedores e produtos confiáveis para garantir a satisfação de nossos clientes.",
       icon: "award"
     },
     {
-      title: "Dolor Sit Amet", 
-      description: "Consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore",
+      title: "Design Moderno",
+      description: "Uma loja pensada para ser intuitiva, bonita e responsiva em qualquer dispositivo.",
       icon: "palette"
     },
     {
-      title: "Consectetur Adipiscing",
-      description: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
+      title: "Atendimento Humanizado",
+      description: "Equipe de suporte sempre disponível para ajudar em cada etapa da sua compra.",
       icon: "users"
     },
     {
-      title: "Tempor Incididunt",
-      description: "Ut labore et dolore magna aliqua ut enim ad minim veniam quis",
+      title: "Entrega Rápida",
+      description: "Parcerias com transportadoras garantem agilidade e segurança nas entregas.",
       icon: "truck"
     },
     {
-      title: "Magna Aliqua", 
-      description: "Ut enim ad minim veniam quis nostrud exercitation ullamco",
+      title: "Suporte Multicanal",
+      description: "Fale conosco por e-mail, WhatsApp ou redes sociais com rapidez e praticidade.",
       icon: "headphones"
     },
     {
-      title: "Nostrud Exercitation",
-      description: "Ullamco laboris nisi ut aliquip ex ea commodo consequat",
+      title: "Experiência Personalizada",
+      description: "Tecnologia aplicada para recomendar produtos de acordo com seu estilo e preferências.",
       icon: "ruler"
     }
   ],
-  
+
   timeline: [
     {
-      year: "2010",
-      title: "Lorem Ipsum",
-      description: "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod"
-    },
-    {
-      year: "2015", 
-      title: "Dolor Sit Amet",
-      description: "Consectetur adipiscing elit sed do eiusmod tempor incididunt"
+      year: "2016",
+      title: "O Início",
+      description: "A NovaTrend nasce como um pequeno projeto de ecommerce local."
     },
     {
       year: "2018",
-      title: "Consectetur Adipiscing",
-      description: "Sed do eiusmod tempor incididunt ut labore et dolore magna"
+      title: "Expansão",
+      description: "Ampliamos nosso catálogo e conquistamos clientes em todo o estado de São Paulo."
     },
     {
-      year: "2021",
-      title: "Tempor Incididunt",
-      description: "Ut labore et dolore magna aliqua ut enim ad minim veniam"
+      year: "2020",
+      title: "Transformação Digital",
+      description: "Atualizamos nossa plataforma para oferecer uma experiência ainda mais rápida e intuitiva."
+    },
+    {
+      year: "2022",
+      title: "Reconhecimento",
+      description: "A NovaTrend passa a ser referência em ecommerce de moda e lifestyle."
     },
     {
       year: "2024",
-      title: "Magna Aliqua", 
-      description: "Ut enim ad minim veniam quis nostrud exercitation ullamco"
+      title: "Presente e Futuro",
+      description: "Continuamos inovando e investindo em tecnologia para oferecer sempre a melhor experiência."
     }
   ],
-  
+
   testimonials: [
     {
-      name: "Lorem Ipsum",
-      role: "Lorem Ipsum",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      name: "Camila Ferreira",
+      role: "Cliente",
+      content: "Adorei a experiência de compra! O site é super fácil de usar e meu pedido chegou antes do prazo.",
       rating: 5
     },
     {
-      name: "Dolor Sit",
-      role: "Consectetur Adipiscing", 
-      content: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud.",
+      name: "Lucas Andrade",
+      role: "Cliente",
+      content: "Produtos de excelente qualidade e um atendimento diferenciado. Com certeza voltarei a comprar!",
       rating: 5
     },
     {
-      name: "Magna Aliqua",
-      role: "Tempor Incididunt",
-      content: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      name: "Mariana Souza",
+      role: "Cliente",
+      content: "Gostei muito da variedade e dos preços justos. A NovaTrend virou minha loja online favorita.",
       rating: 5
     }
   ]

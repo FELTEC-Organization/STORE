@@ -14,10 +14,10 @@ export function Timeline() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground mb-6">
-            Lorem Ipsum
+            Nossa historia
           </h2>
           <p className="text-lg text-muted-foreground">
-            Lorem ipsum dolor sit amet consectetur
+            Caminho que percorremos juntos até aqui
           </p>
         </motion.div>
 

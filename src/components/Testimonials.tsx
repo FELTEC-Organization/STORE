@@ -15,10 +15,10 @@ export function Testimonials() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground mb-6">
-            Lorem ipsum dolor sit
+            Avaliações dos clientes
           </h2>
           <p className="text-lg text-muted-foreground">
-            Lorem ipsum dolor sit amet consectetur adipiscing
+            O que nossos clientes dizem sobre nós
           </p>
         </motion.div>
 
