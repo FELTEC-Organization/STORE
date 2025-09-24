@@ -16,7 +16,7 @@ export function filterProducts(products: Product[], filters: FilterOptions): Pro
   if (filters.search.trim()) {
     const searchLower = filters.search.toLowerCase().trim();
     filtered = filtered.filter(
-      product => 
+      product =>
         product.name.toLowerCase().includes(searchLower) ||
         product.description.toLowerCase().includes(searchLower) ||
         product.tags.some(tag => tag.toLowerCase().includes(searchLower))
@@ -25,14 +25,14 @@ export function filterProducts(products: Product[], filters: FilterOptions): Pro
 
   // Filtro por categorias
   if (filters.categories.length > 0) {
-    filtered = filtered.filter(product => 
+    filtered = filtered.filter(product =>
       filters.categories.includes(product.category)
     );
   }
 
   // Filtro por faixa de preço
-  filtered = filtered.filter(product => 
-    product.price >= filters.minPrice && 
+  filtered = filtered.filter(product =>
+    product.price >= filters.minPrice &&
     product.price <= filters.maxPrice
   );
 
@@ -69,7 +69,7 @@ export function formatPrice(price: number): string {
 
 export function getPriceRange(products: Product[]): { min: number; max: number } {
   if (products.length === 0) return { min: 0, max: 1000 };
-  
+
   const prices = products.map(p => p.price);
   return {
     min: Math.floor(Math.min(...prices)),
@@ -82,12 +82,12 @@ export function getWhatsAppUrl(product: Product, whatsappNumber: string): string
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
-export function debounce<T extends (...args: any[]) => void>(
+export function debounce<T extends (...args: unknown[]) => void>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout;
-  
+  let timeout: ReturnType<typeof setTimeout>;
+
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);

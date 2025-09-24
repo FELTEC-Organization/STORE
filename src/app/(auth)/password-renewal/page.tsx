@@ -6,8 +6,17 @@ import ErrorAlert from "@/app/(auth)/login/components/errorAlert";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 export default function PasswordRenewPage() {
+	type TPasswordRenewForm = {
+		email: string;
+	};
+
+	const { register, handleSubmit, formState: { errors, isValid } } = useForm<TPasswordRenewForm>({
+		mode: "onChange",
+	});
+
 	const router = useRouter();
 
 	const [showError, setShowError] = useState(false);
@@ -63,8 +72,8 @@ export default function PasswordRenewPage() {
 						id="email"
 						label="Email"
 						placeholder="ex.: email@empresa.com.br"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
+						register={register("email")}
+						error={errors.email?.message}
 					/>
 				</div>
 

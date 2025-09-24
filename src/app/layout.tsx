@@ -12,7 +12,7 @@ export const metadata = {
   lang: "pt-BR",
 };
 
-export default function RootLayout({ children }: { children: ReactNode; pathname: string }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
 
   return (
     <html lang="pt-BR">

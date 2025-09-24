@@ -17,7 +17,6 @@ import {
 import { Filter, XCircle, CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
 // import type { FilterProps } from "../types/acessRoutesContract";
-import { useTranslation } from "react-i18next";
 import { showToast } from "@/components/toast/showToast";
 // import { listRoutesService } from "../services/accessRoutes.service";
 // import type { ListSchedulesParamsResponse } from "../types/schedulesContract";
@@ -34,7 +33,6 @@ export function FilterDialog({
 	onApplyFilters,
 }: FilterDialogProps) {
 	const [open, setOpen] = useState(false);
-	const { t } = useTranslation();
 	const [schedules, setSchedules] = useState<any[]>([]);
 	// const getSchedules = async () => {
 	// 	const resp = await listRoutesService.listSchedules({
@@ -73,23 +71,23 @@ export function FilterDialog({
 			<DialogTrigger asChild>
 				<Button variant="outline">
 					<Filter className="w-4 h-4 mr-2" />
-					{t("Filter")}
+					{("Filter")}
 				</Button>
 			</DialogTrigger>
 
 			{/* Conteúdo do Dialog */}
 			<DialogContent className="max-w-md">
 				<div className="space-y-4">
-					<DialogTitle>{t("Filter")}</DialogTitle>
+					<DialogTitle>{("Filter")}</DialogTitle>
 					<DialogDescription className="sr-only">
-						{t("Filter options for access routes")}
+						{("Filter options for access routes")}
 					</DialogDescription>
 					{/* Select Equipment */}
 					<div className="space-y-2">
-						<Label htmlFor="schedule">{t("Schedules")}</Label>
+						<Label htmlFor="schedule">{("Schedules")}</Label>
 						<Select value={schedule} onValueChange={setSchedule}>
 							<SelectTrigger id="schedule">
-								<SelectValue placeholder={t("Filter schedules")} />
+								<SelectValue placeholder={("Filter schedules")} />
 							</SelectTrigger>
 							<SelectContent>
 								{schedules?.map((item) => (
@@ -105,12 +103,12 @@ export function FilterDialog({
 						<Label htmlFor="status">Status</Label>
 						<Select value={status} onValueChange={setStatus}>
 							<SelectTrigger id="status">
-								<SelectValue placeholder={t("Filter status")} />
+								<SelectValue placeholder={("Filter status")} />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="-">{t("All")}</SelectItem>
-								<SelectItem value="1">{t("Active")}</SelectItem>
-								<SelectItem value="0">{t("Inactive")}</SelectItem>
+								<SelectItem value="-">{("All")}</SelectItem>
+								<SelectItem value="1">{("Active")}</SelectItem>
+								<SelectItem value="0">{("Inactive")}</SelectItem>
 							</SelectContent>
 						</Select>
 					</div>
@@ -118,7 +116,7 @@ export function FilterDialog({
 					{/* Buttons Cancel or Confirm */}
 					<div className="flex justify-end gap-2 pt-4">
 						<Button
-							variant="outlineDestructive"
+							variant="adventure"
 							onClick={() => {
 								handleClear();
 								setOpen(false);
@@ -129,7 +127,7 @@ export function FilterDialog({
 						</Button>
 
 						<Button
-							variant="primary"
+							variant="sunset"
 							onClick={() => {
 								onApplyFilters();
 								setOpen(false);

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/contexts/auth.ctx";
 import { localstorageService } from "@/services/localstorage.service";
@@ -16,9 +16,9 @@ import type { AuthResponseCore } from "@/app/(auth)/login/types/contract";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  translateLoginSchema,
   type TLoginSchema,
 } from "@/app/(auth)/login/schemas/loginSchema";
+import { loginSchema } from "@/app/(auth)/login/schemas/loginSchema";
 
 export default function LoginPage() {
   const { handleSetUser } = useContext(AuthContext);
@@ -33,13 +33,12 @@ export default function LoginPage() {
   const ERROR_DURATION = isLoginBlocked ? 120000 : 4000;
   const MAX_ATTEMPTS = 5;
 
-  const schema = translateLoginSchema((key) => key);
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<TLoginSchema>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(loginSchema),
     mode: "onChange",
   });
 
@@ -176,3 +175,7 @@ export default function LoginPage() {
     </AuthLayout>
   );
 }
+function translateLoginSchema(arg0: (key: any) => any) {
+  throw new Error("Function not implemented.");
+}
+

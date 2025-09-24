@@ -47,7 +47,7 @@ class LocalstorageService {
      * @param step - Nome ou identificador da etapa.
      * @param data - Dados a serem armazenados.
      */
-    saveRegisterStepData(step: string, data: any) {
+    saveRegisterStepData(step: string, data: unknown) {
         localStorage.setItem(`@NPG-register-step-${step}`, JSON.stringify(data))
     }
     
@@ -56,7 +56,7 @@ class LocalstorageService {
      * @param step - Nome ou identificador da etapa.
      * @returns Os dados armazenados ou null se não existirem.
      */
-    loadRegisterStepData<T = any>(step: string): T | null {
+    loadRegisterStepData<T = unknown>(step: string): T | null {
         const value = localStorage.getItem(`@NPG-register-step-${step}`)
         if (!value) return null
         return JSON.parse(value) as T

@@ -30,16 +30,16 @@ export function RoutesActionsCell({
 	const hasUsers = row.original.hasUsers;
 
 	const fetchUserProfiles = async () => {
-		const resp = await fetchProducts.list({ currentPage: 1, pageSize: 999, orderField: 'id', orderType: 'asc', isEnabled: true });
-		if (resp.sucess && resp.value?.items) {
-			setAllUserProfiles(resp.value.items);
-		} else {
-			showToast({
-				type: "error",
-				title: "Falha ao buscar produtos",
-				description: (String(resp.errors)),
-			});
-		}
+		// const resp = await fetchProducts.list({ currentPage: 1, pageSize: 999, orderField: 'id', orderType: 'asc', isEnabled: true });
+		// if (resp.sucess && resp.value?.items) {
+		// 	setAllUserProfiles(resp.value.items);
+		// } else {
+		// 	showToast({
+		// 		type: "error",
+		// 		title: "Falha ao buscar produtos",
+		// 		description: (String(resp.errors)),
+		// 	});
+		// }
 	};
 
 	const handleDeleteAction = async () => {
@@ -52,16 +52,16 @@ export function RoutesActionsCell({
 			return;
 		}
 
-		const resp = await userProfilesService.delete(String(row.original.id), newProfileId);
+		// const resp = await userProfilesService.delete(String(row.original.id), newProfileId);
 
-		if (!resp.sucess) {
-			showToast({
-				type: "error",
-				title: "Algo deu errado",
-				description: (String(resp.errors)),
-			});
-			return;
-		}
+		// if (!resp.sucess) {
+		// 	showToast({
+		// 		type: "error",
+		// 		title: "Algo deu errado",
+		// 		description: (String(resp.errors)),
+		// 	});
+		// 	return;
+		// }
 
 		showToast({
 			type: "success",

@@ -15,8 +15,9 @@ export interface AuthResponseCore {
 }
 
 // Define o formato do contexto de autenticação
-export interface AuthContextTypes extends AuthResponseCore {
-    handleSetUser(props: AuthResponseCore): void 
+export interface AuthContextTypes {
+    user: AuthResponseCore | null;
+    handleSetUser(user: AuthResponseCore): void 
     handleExitUser(): void
 }
 
