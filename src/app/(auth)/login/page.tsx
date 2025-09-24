@@ -175,7 +175,5 @@ export default function LoginPage() {
     </AuthLayout>
   );
 }
-function translateLoginSchema(arg0: (key: any) => any) {
-  throw new Error("Function not implemented.");
-}
+
 
