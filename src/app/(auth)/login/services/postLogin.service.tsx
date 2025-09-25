@@ -16,15 +16,11 @@ interface LoginResponse {
 }
 
 // Função que consome o endpoint /api/login
-export const postLogin = async (
-  payload: LoginPayload
-): Promise<LoginResponse> => {
-  const res = await fetch("/api/login", {
+export async function postLogin(data: { email: string; password: string }) {
+  const res = await fetch("https://portfolio-produtos-feltec.onrender.com/api/Users/login", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
   });
 
   if (!res.ok) {
