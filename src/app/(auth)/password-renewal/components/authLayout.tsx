@@ -12,14 +12,14 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
 
 
 			{/* Conteúdo (formulário) */}
-			<div className="w-1/2 bg-nc-base-50 dark:bg-background px-10 pt-8 pb-6 3xl:pb-8 flex flex-col justify-between overflow-auto">
+			<div className="w-1/2 bg-adventure/10 dark:bg-adventure/15 px-10 pt-8 pb-6 3xl:pb-8 flex flex-col justify-between overflow-auto">
 				{children}
 			</div>			
 			
 			{/* Imagem do lado esquerdo */}
 			<div
 				className="w-1/2 bg-cover bg-center"
-				style={{ backgroundImage: "url('/bg-login.jpg')" }}
+				style={{ backgroundImage: "url('/forgot-password.jpg')" }}
 			/>
 		</div>
 	);

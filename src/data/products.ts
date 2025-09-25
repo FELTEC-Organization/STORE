@@ -12,123 +12,123 @@ export type Product = {
 export const PRODUCTS: Product[] = [
   {
     id: 'p1',
-    name: 'Produto Lorem A',
-    description: 'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor.',
-    price: 499.90,
+    name: 'Cadeira Ergonômica OfficePro',
+    description: 'Conforto e design moderno com regulagem de altura e apoio lombar para longas horas de trabalho.',
+    price: 899.90,
     category: 'Cadeiras',
-    tags: ['lorem', 'ipsum', 'dolor'],
+    tags: ['ergonômica', 'escritório', 'conforto'],
     inStock: true,
-    image: 'https://picsum.photos/seed/product1/800/600'
+    image: 'https://picsum.photos/seed/chair1/800/600'
   },
   {
     id: 'p2',
-    name: 'Produto Ipsum B',
-    description: 'Consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore.',
-    price: 699.00,
+    name: 'Mesa de Jantar Viena',
+    description: 'Mesa em madeira maciça com acabamento premium, ideal para até 6 pessoas.',
+    price: 1599.00,
     category: 'Mesas',
-    tags: ['consectetur', 'adipiscing', 'elit'],
+    tags: ['madeira', 'sala de jantar', 'premium'],
     inStock: true,
-    image: 'https://picsum.photos/seed/product2/800/600'
+    image: 'https://picsum.photos/seed/table1/800/600'
   },
   {
     id: 'p3',
-    name: 'Produto Dolor C',
-    description: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.',
-    price: 2599.00,
+    name: 'Sofá Retrátil Confort 3 Lugares',
+    description: 'Estofado reclinável e retrátil em tecido suede, perfeito para salas modernas.',
+    price: 2899.00,
     category: 'Sofás',
-    tags: ['tempor', 'incididunt', 'labore'],
-    inStock: false,
-    image: 'https://picsum.photos/seed/product3/800/600'
+    tags: ['retrátil', 'reclinável', 'conforto'],
+    inStock: true,
+    image: 'https://picsum.photos/seed/sofa1/800/600'
   },
   {
     id: 'p4',
-    name: 'Produto Magna D',
-    description: 'Ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud.',
-    price: 149.90,
+    name: 'Kit Quadros Decorativos Abstratos',
+    description: 'Conjunto de 3 quadros com moldura de madeira, estilo minimalista para sala ou escritório.',
+    price: 249.90,
     category: 'Decoração',
-    tags: ['magna', 'aliqua', 'enim'],
+    tags: ['quadros', 'minimalista', 'arte'],
     inStock: true,
-    image: 'https://picsum.photos/seed/product4/800/600'
+    image: 'https://picsum.photos/seed/decor1/800/600'
   },
   {
     id: 'p5',
-    name: 'Produto Veniam E',
-    description: 'Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi.',
-    price: 229.00,
+    name: 'Fone Bluetooth Noise Cancel Pro',
+    description: 'Som imersivo com cancelamento de ruído ativo e bateria de até 30h.',
+    price: 749.00,
     category: 'Eletrônicos',
-    tags: ['veniam', 'nostrud', 'exercitation'],
+    tags: ['bluetooth', 'noise-cancel', 'áudio'],
     inStock: true,
-    image: 'https://picsum.photos/seed/product5/800/600'
+    image: 'https://picsum.photos/seed/phone1/800/600'
   },
   {
     id: 'p6',
-    name: 'Produto Nostrud F',
-    description: 'Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.',
+    name: 'Cadeira Gamer ThunderX',
+    description: 'Design ergonômico com ajuste 180º, apoio para braços e costura reforçada.',
     price: 1299.00,
     category: 'Cadeiras',
-    tags: ['ullamco', 'laboris', 'aliquip'],
+    tags: ['gamer', 'ergonômica', 'estilo'],
     inStock: true,
-    image: 'https://picsum.photos/seed/product6/800/600'
+    image: 'https://picsum.photos/seed/chair2/800/600'
   },
   {
     id: 'p7',
-    name: 'Produto Laboris G',
-    description: 'Ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure.',
-    price: 1899.00,
+    name: 'Mesa Escritório Compact Pro',
+    description: 'Mesa funcional com prateleiras embutidas e acabamento em madeira clara.',
+    price: 899.00,
     category: 'Mesas',
-    tags: ['commodo', 'consequat', 'duis'],
+    tags: ['escritório', 'compacta', 'funcional'],
     inStock: true,
-    image: 'https://picsum.photos/seed/product7/800/600'
+    image: 'https://picsum.photos/seed/table2/800/600'
   },
   {
     id: 'p8',
-    name: 'Produto Commodo H',
-    description: 'Ex ea commodo consequat duis aute irure dolor in reprehenderit voluptate.',
-    price: 3299.00,
+    name: 'Sofá-Cama Versatile',
+    description: 'Sofá 2 lugares que se transforma em cama de casal, ideal para espaços pequenos.',
+    price: 2199.00,
     category: 'Sofás',
-    tags: ['aute', 'irure', 'reprehenderit'],
-    inStock: true,
-    image: 'https://picsum.photos/seed/product8/800/600'
+    tags: ['sofá-cama', 'versátil', 'compacto'],
+    inStock: false,
+    image: 'https://picsum.photos/seed/sofa2/800/600'
   },
   {
     id: 'p9',
-    name: 'Produto Irure I',
-    description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.',
-    price: 899.00,
+    name: 'Luminária de Mesa LED Touch',
+    description: 'Iluminação ajustável com toque, ideal para leitura e ambiente de estudo.',
+    price: 199.00,
     category: 'Decoração',
-    tags: ['dolor', 'voluptate', 'cillum'],
-    inStock: false,
-    image: 'https://picsum.photos/seed/product9/800/600'
+    tags: ['luz', 'led', 'estudo'],
+    inStock: true,
+    image: 'https://picsum.photos/seed/decor2/800/600'
   },
   {
     id: 'p10',
-    name: 'Produto Voluptate J',
-    description: 'In reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.',
-    price: 2799.00,
+    name: 'Smartwatch FitX Pro',
+    description: 'Relógio inteligente com monitoramento de saúde, GPS e resistência à água.',
+    price: 1299.00,
     category: 'Eletrônicos',
-    tags: ['velit', 'esse', 'fugiat'],
+    tags: ['smartwatch', 'fitness', 'tecnologia'],
     inStock: true,
-    image: 'https://picsum.photos/seed/product10/800/600'
+    image: 'https://picsum.photos/seed/elec1/800/600'
   },
   {
     id: 'p11',
-    name: 'Produto Esse K',
-    description: 'Velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat.',
-    price: 1599.00,
+    name: 'Cadeira de Madeira Rústica',
+    description: 'Cadeira artesanal em madeira de reflorestamento, ideal para ambientes aconchegantes.',
+    price: 459.00,
     category: 'Cadeiras',
-    tags: ['cillum', 'pariatur', 'excepteur'],
+    tags: ['madeira', 'artesanal', 'rústico'],
     inStock: true,
-    image: 'https://picsum.photos/seed/product11/800/600'
+    image: 'https://picsum.photos/seed/chair3/800/600'
   },
   {
     id: 'p12',
-    name: 'Produto Fugiat L',
-    description: 'Eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident.',
-    price: 799.00,
+    name: 'Mesa Lateral Minimal',
+    description: 'Mesa lateral redonda com tampo de vidro temperado e estrutura metálica.',
+    price: 599.00,
     category: 'Mesas',
-    tags: ['pariatur', 'cupidatat', 'proident'],
+    tags: ['minimalista', 'vidro', 'moderno'],
     inStock: true,
-    image: 'https://picsum.photos/seed/product12/800/600'
+    image: 'https://picsum.photos/seed/table3/800/600'
   }
 ];
 

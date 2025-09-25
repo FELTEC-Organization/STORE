@@ -24,7 +24,7 @@ export function Features() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground mb-6">
-            Por que NovaTrend é o melhor ecommerce?
+            Por que Mauve é o melhor ecommerce?
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Fazemos nosso melhor para oferecer a você uma experiência de compra excepcional, com produtos de alta qualidade e atendimento dedicado.

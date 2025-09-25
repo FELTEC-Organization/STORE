@@ -64,9 +64,9 @@ export default function PasswordRenewPage() {
 				</div>
 
 				{/* Input */}
-				<div className="flex flex-col gap-4">
-					<h2 className="text-nc-neutral-900 font-medium text-base">
-						Email de acesso
+				<div className="flex flex-col gap-2">
+					<h2 className="font-bold text-lg text-sunset">
+						Email de acesso:
 					</h2>
 					<AuthInput
 						id="email"

@@ -31,7 +31,7 @@ export default function AuthInput({
 				id={id}
 				type={type}
 				placeholder={placeholder}
-				className={`bg-nc-neutral-50 dark:bg-nc-neutral-900 ${
+				className={`bg-adventure/20 dark:bg-adventure/30 ${
 					error ? "border-red-500" : ""
 				}`}
 				{...register}

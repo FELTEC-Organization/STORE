@@ -23,7 +23,7 @@ export default function PasswordInput({
 		<div className="flex flex-col gap-1">
 			<label
 				htmlFor="senha"
-				className="text-nc-neutral-900 dark:text-nc-neutral-200 font-medium"
+				className="font-medium"
 			>
 				{label}
 			</label>
@@ -32,7 +32,7 @@ export default function PasswordInput({
 					id="senha"
 					type={show ? "text" : "password"}
 					placeholder={placeholder ? placeholder : "*********"}
-					className="pr-10 bg-nc-neutral-50 dark:bg-nc-neutral-900"
+					className="pr-10 bg-adventure/20 dark:bg-adventure/30"
 					{...register}
 				/>
 				<button
