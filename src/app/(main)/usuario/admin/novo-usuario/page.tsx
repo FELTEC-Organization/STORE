@@ -119,11 +119,11 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
 
             <div className="space-y-6 p-4">
                 <div className="flex flex-col gap-4">
-                    <div className="mx-6">
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    <div className="text-center md:text-left mx-6">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-foreground mb-2">
                             Cadastro de Produto
                         </h1>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="text-sm md:text-base !text-sunset">
                             Preencha os dados do produto e faça upload da foto
                         </p>
                     </div>
@@ -236,6 +236,7 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
                                     id="description"
                                     placeholder="Descrição do produto"
                                     {...register("description")}
+                                    className="shadow-md"
                                 />
                                 {errors.description && (
                                     <span className="text-red-600 text-sm">
@@ -249,7 +250,7 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
 
                 {/* Botão salvar */}
                 <div className="flex justify-end">
-                    <Button onClick={handleSubmit(onSubmit)} disabled={loading}>
+                    <Button onClick={handleSubmit(onSubmit)} disabled={loading} variant="sunset">
                         <Save className="mr-2" />
                         {loading ? "Salvando..." : "Salvar"}
                     </Button>

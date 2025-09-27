@@ -51,51 +51,63 @@ export default function ListUsers() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row items-center justify-between px-30 p-16 rounded-lg shadow-md">
+      {/* Header / Hero */}
+      <div className="flex flex-col md:flex-row items-center justify-between p-8 md:p-16 bg-gradient-to-r from-indigo-50 to-white dark:from-adventure/10 dark:to-zinc-950 rounded-xl shadow-lg gap-8">
         {/* Lado esquerdo: texto e botão */}
-        <div className="md:w-1/2">
-          <h2 className="text-6xl font-bold mb-4">Gerenciamento de Usuários</h2>
-          <p className="text-gray-600 mb-6">
+        <div className="md:w-1/2 space-y-4">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground drop-shadow-sm">
+            Gerenciamento de Usuários
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg">
             Gerencie e controle o acesso de usuários de forma eficiente.
             Um administrador pode conceder permissões e gerenciar o acesso de outros usuários, mantendo o limite de 3 contas ativas conforme definido.
           </p>
-          <Button className="bg-indigo-500 text-white px-5 py-2 rounded hover:bg-indigo-600 transition">
-            Adicionar Novo Usuário
+          <Button
+            className="bg-sunset text-white px-6 py-3 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 hover:scale-105"
+            onClick={() => router.push("/users/user-profiles/create-profile")}
+          >
+            <SquarePlus className="w-5 h-5 mr-2" /> Adicionar Novo Usuário
           </Button>
         </div>
 
         {/* Lado direito: imagem/ilustração */}
-        <Image
-          src="/logAdm.jpg"
-          alt="Ilustração de produtos"
-          width={500}
-          height={350}
-          className="max-w-full h-auto rounded-xl"
-        />
+        <div className="md:w-1/2 flex justify-center">
+          <Image
+            src="/logAdm.jpg"
+            alt="Ilustração de usuários"
+            width={500}
+            height={350}
+            className="max-w-full h-auto rounded-xl shadow-lg"
+          />
+        </div>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      {/* Filtros e busca */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-8 p-4 bg-background rounded-lg shadow-md">
+        {/* Campo de busca */}
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
-            placeholder="Buscar produtos..."
+            placeholder="Buscar usuários..."
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
-            className="pl-9"
+            className="pl-10 border border-border/30 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg transition-all w-full"
           />
         </div>
 
+        {/* Botões de ação */}
         <div className="flex gap-2">
           <Button
             onClick={() => router.push("/users/user-profiles/create-profile")}
+            className="bg-sunset text-white px-4 py-2 rounded-lg shadow transition-all hover:-translate-y-0.5"
           >
-            <SquarePlus className="w-4 h-4 mr-2" /> Criar novo produto
+            <SquarePlus className="w-4 h-4 mr-2" /> Criar novo usuário
           </Button>
         </div>
       </div>
 
       {/* Tabela de dados */}
-      <div className="overflow-x-auto mt-4">
+      <div className="overflow-x-auto mt-2 pb-4 rounded-lg bg-background">
         <DataTable
           filters={appliedFilters}
           onSelectionChange={setSelectedRows}
@@ -105,5 +117,5 @@ export default function ListUsers() {
         />
       </div>
     </>
-  );
+  )
 }

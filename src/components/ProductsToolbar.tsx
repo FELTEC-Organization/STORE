@@ -147,7 +147,7 @@ export function ProductsToolbar({
                 <h3 className="font-semibold text-sm text-foreground mb-3">Faixa de Preço</h3>
                 <div className="space-y-3">
                   <div>
-                    <Label htmlFor="min-price" className="text-xs text-muted-foreground">
+                    <Label htmlFor="min-price" className="text-xs text-muted-foreground mb-1">
                       Preço mínimo
                     </Label>
                     <Input
@@ -161,7 +161,7 @@ export function ProductsToolbar({
                     />
                   </div>
                   <div>
-                    <Label htmlFor="max-price" className="text-xs text-muted-foreground">
+                    <Label htmlFor="max-price" className="text-xs text-muted-foreground mb-1">
                       Preço máximo
                     </Label>
                     <Input
