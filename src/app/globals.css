@@ -43,6 +43,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --color-sunset: var(--color-base); /* cor SUNSET */
   --color-adventure: #233D4C; /* cor ADVENTURE */
+  --color-sunset-dark: color-mix(in srgb, var(--color-base) 50%, black); /* cor SUNSET mais escura */
 
   --color-base:  #FE7F2D;
 }
@@ -78,12 +79,12 @@
   --sidebar-accent-foreground: oklch(0.216 0.006 56.043);
   --sidebar-border: oklch(0.923 0.003 48.717);
   --sidebar-ring: oklch(0.709 0.01 56.259);
-  --background: oklch(1 0 0);
+  --background: oklch(91.887% 0.0201 271.152);
   --foreground: oklch(0.147 0.004 49.25);
 }
 
 .dark {
-  --background: oklch(0.147 0.004 49.25);
+  --background: oklch(21.779% 0.00002 271.152);
   --foreground: oklch(0.985 0.001 106.423);
   --card: oklch(0.216 0.006 56.043);
   --card-foreground: oklch(0.985 0.001 106.423);

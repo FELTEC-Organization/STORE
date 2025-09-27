@@ -16,7 +16,7 @@ export default function Products() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const priceRange = useMemo(() => getPriceRange(PRODUCTS), []);
-  
+
   // State from URL params
   const [filters, setFilters] = useState<FilterOptions>({
     search: searchParams.get('q') || '',
@@ -26,7 +26,7 @@ export default function Products() {
     onlyInStock: searchParams.get('disponivel') === 'true',
     sortBy: (searchParams.get('ordem') as FilterOptions['sortBy']) || 'name-asc'
   });
-  
+
   const currentPage = parseInt(searchParams.get('pagina') || '1');
 
   // Update URL when filters change
@@ -48,7 +48,7 @@ export default function Products() {
   useEffect(() => {
     updateUrlParams(filters, currentPage);
   }, [filters, currentPage]);
-  
+
   const filteredProducts = useMemo(() => filterProducts(PRODUCTS, filters), [filters]);
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -78,7 +78,7 @@ export default function Products() {
   const activeFilters = [
     ...(filters.search ? [{ type: 'search', label: `Busca: "${filters.search}"`, value: filters.search }] : []),
     ...filters.categories.map(cat => ({ type: 'category', label: cat, value: cat })),
-    ...((filters.minPrice !== priceRange.min || filters.maxPrice !== priceRange.max) ? 
+    ...((filters.minPrice !== priceRange.min || filters.maxPrice !== priceRange.max) ?
       [{ type: 'price', label: `R$ ${filters.minPrice} - R$ ${filters.maxPrice}`, value: 'price' }] : []),
     ...(filters.onlyInStock ? [{ type: 'stock', label: 'Apenas disponíveis', value: 'stock' }] : [])
   ];
@@ -87,23 +87,27 @@ export default function Products() {
     <div className="min-h-screen bg-background">
       <main>
         {/* Page Header */}
-        <section className="py-12 bg-gradient-subtle border-b border-border/50">
-          <div className="container mx-auto px-4">
+        <section className="relative py-10 bg-gradient-subtle border-b border-border/50 overflow-hidden">
+          <div className="text-center relative z-10">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center"
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-extrabold text-foreground mb-4 leading-tight drop-shadow-sm">
                 Nossos Produtos
               </h1>
-              <p className="text-lg text-muted-foreground">
-                Encontre a peça perfeita para seu espaço
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+                Encontre a peça perfeita para seu espaço e transforme seu ambiente com estilo e qualidade
               </p>
             </motion.div>
+
+            {/* Background subtle detail */}
+            <div className="absolute -top-10 -left-20 w-96 h-96 border-2 rounded-full border-border/30 border-sunset/20 dark:border-border/60 pointer-events-none" />
+            <div className="absolute -bottom-16 -right-16 w-72 h-72 border-2 rounded-full border-border/30 border-sunset/20 dark:border-border/60 pointer-events-none" />
           </div>
         </section>
+
 
         {/* Filters and Products */}
         <section className="py-8">

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
@@ -11,8 +11,9 @@ export function Contact() {
   };
 
   return (
-    <section id="contato" className="py-20 bg-background">
-      <div className="container mx-auto px-4">
+    <section id="contato" className="py-24 bg-background">
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Cabeçalho */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -20,99 +21,67 @@ export function Contact() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground mb-6">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4">
             Entre em Contato
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
             Estamos aqui para ajudar você a encontrar a peça perfeita
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Contact Info */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
+          {/* Informações de contato */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="space-y-8"
+            className="space-y-6"
           >
-            <div className="bg-gradient-card p-8 rounded-2xl shadow-card border border-border/50">
-              <h3 className="text-2xl font-semibold text-foreground mb-6">
-                Informações de Contato
-              </h3>
-              
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MapPin className="h-5 w-5 text-primary" />
+            {[
+              { icon: MapPin, label: "Endereço", value: siteConfig.contact.address },
+              { icon: Phone, label: "Telefone", value: siteConfig.contact.phone },
+              { icon: Mail, label: "E-mail", value: siteConfig.contact.email },
+              { icon: Clock, label: "Horário", value: siteConfig.contact.hours },
+            ].map((info) => {
+              const Icon = info.icon;
+              return (
+                <div key={info.label} className="flex items-center gap-4">
+                  <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-sunset/20">
+                    <Icon className="h-5 w-5 text-sunset" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-foreground mb-1">Endereço</h4>
-                    <p className="text-muted-foreground">{siteConfig.contact.address}</p>
+                    <h4 className="text-foreground font-medium">{info.label}</h4>
+                    <p className="text-muted-foreground">{info.value}</p>
                   </div>
                 </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Phone className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-foreground mb-1">Telefone</h4>
-                    <p className="text-muted-foreground">{siteConfig.contact.phone}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Mail className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-foreground mb-1">E-mail</h4>
-                    <p className="text-muted-foreground">{siteConfig.contact.email}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Clock className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-foreground mb-1">Horário de Funcionamento</h4>
-                    <p className="text-muted-foreground">{siteConfig.contact.hours}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </motion.div>
 
-          {/* WhatsApp CTA */}
+          {/* CTA WhatsApp */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="flex items-center"
+            className="flex items-center justify-center"
           >
-            <div className="bg-gradient-hero p-8 rounded-2xl shadow-glow text-center w-full">
-              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="bg-gradient-to-r from-sunset to-sunset-dark p-10 rounded-3xl text-center shadow-lg hover:shadow-[0_15px_35px_var(--color-sunset-dark)] transition-shadow duration-200">
+              <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4 rounded-lg bg-white/20">
                 <MessageCircle className="h-8 w-8 text-white" />
               </div>
-              
-              <h3 className="text-2xl font-bold text-white mb-4">
+              <h3 className="text-2xl font-bold text-white mb-3">
                 Fale Conosco no WhatsApp
               </h3>
-              
-              <p className="text-white/90 mb-8 leading-relaxed">
-                Tire suas dúvidas, solicite orçamentos ou agende uma visita. 
-                Nosso atendimento é rápido e personalizado!
+              <p className="text-white/90 mb-6 leading-relaxed">
+                Tire suas dúvidas ou solicite orçamentos rapidamente!
               </p>
-              
               <Button
                 onClick={handleWhatsApp}
                 variant="secondary"
                 size="lg"
-                className="bg-white text-primary hover:bg-white/90 font-semibold px-8 py-6 text-lg"
+                className="bg-white text-sunset hover:bg-white/90 font-semibold px-6 py-4"
               >
                 <MessageCircle className="mr-2 h-5 w-5" />
                 Chamar no WhatsApp

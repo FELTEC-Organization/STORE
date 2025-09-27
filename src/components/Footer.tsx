@@ -18,15 +18,15 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-hero rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg"><Slack/></span>
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 via-sunset to-sunset-dark rounded-lg flex items-center justify-center">
+                <Slack className="text-white h-5 w-5" />
               </div>
-              <span className="font-serif text-xl font-semibold text-foreground">
+              <span className="font-serif text-2xl font-bold text-foreground">
                 {siteConfig.name}
               </span>
             </div>
-            <p className="text-muted-foreground mb-6 max-w-md">
+            <p className="text-muted-foreground max-w-sm mb-4">
               {siteConfig.description}
             </p>
             

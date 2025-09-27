@@ -13,6 +13,9 @@ import {
   CircleUserRound,
   Slack,
   Palette,
+  MessageCircle,
+  UsersRound,
+  ShoppingBag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/use-theme";
@@ -118,36 +121,56 @@ export function Header() {
             {/* Sidebar só aparece se estiver logado */}
             {user?.token && (
               <Sheet>
+                {/* Botão Trigger elegante */}
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="ml-1">
-                    <ArrowRight className="h-4 w-4" />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="ml-1 p-3 rounded-full hover:bg-sunset/20 transition-all shadow-sm group"
+                    aria-label="Abrir área restrita"
+                  >
+                    <ArrowRight className="h-6 w-6 text-sunset transition-transform duration-300 group-hover:scale-110" />
                   </Button>
                 </SheetTrigger>
 
-                <SheetContent side="left" className="w-64">
-                  <SheetHeader>
-                    <SheetTitle className="text-lg font-semibold">
-                      Área restrita
+                <SheetContent
+                  side="left"
+                  className="w-72 sm:w-80 bg-background/95 backdrop-blur-md border-r border-border/30 shadow-2xl rounded-r-xl"
+                >
+                  {/* Cabeçalho */}
+                  <SheetHeader className="pb-2 border-b border-sunset/30 mt-4">
+                    <SheetTitle className="text-xl md:text-2xl font-bold text-foreground">
+                      Menus de Administração
                     </SheetTitle>
                   </SheetHeader>
 
-                  <nav className="flex flex-col gap-4 px-4">
+                  {/* Navegação principal */}
+                  <nav className="flex flex-col gap-4 mt-6 px-2">
                     {/* Controle de Usuários */}
                     <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="users">
-                        <AccordionTrigger className="text-sm font-medium text-muted-foreground hover:text-foreground">
-                          Controle de Usuários
+                      <AccordionItem
+                        value="users"
+                        className="rounded-xl transition-colors shadow-md"
+                      >
+                        <AccordionTrigger className="flex justify-between items-center text-base md:text-lg font-semibold text-foreground hover:text-sunset transition-colors">
+                          <span className="flex items-center">
+                            {/* Ícone opcional */}
+                            <span className="flex items-center justify-center h-8 w-8 bg-sunset rounded-full mx-2">
+                              <UsersRound className="h-5 w-5 text-white" />
+                            </span>
+                            Controle de Usuários
+                          </span>
                         </AccordionTrigger>
-                        <AccordionContent className="pl-4 flex flex-col gap-2">
+                        <AccordionContent className="pl-8 flex flex-col gap-2 mt-2 text-sm md:text-base text-muted-foreground">
                           <Link
                             href="/usuario/admin/novo-usuario"
-                            className="text-sm text-muted-foreground hover:text-foreground"
+                            className="flex items-center gap-2 dark:text-white text-black hover:text-sunset transition-colors"
                           >
                             Adicionar Usuário
                           </Link>
                           <Link
                             href="/usuario/admin/lista-usuarios"
-                            className="text-sm text-muted-foreground hover:text-foreground"
+                            className="flex items-center gap-2 dark:text-white text-black hover:text-sunset transition-colors"
                           >
                             Listar Usuários
                           </Link>
@@ -157,20 +180,28 @@ export function Header() {
 
                     {/* Produtos */}
                     <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="products">
-                        <AccordionTrigger className="text-sm font-medium text-muted-foreground hover:text-foreground">
-                          Produtos
+                      <AccordionItem
+                        value="products"
+                        className="rounded-xl transition-colors shadow-md"
+                      >
+                        <AccordionTrigger className="flex justify-between items-center text-base md:text-lg font-semibold text-foreground hover:text-sunset transition-colors">
+                          <span className="flex items-center">
+                            <span className="flex items-center justify-center h-8 w-8 bg-sunset rounded-full mx-2">
+                              <ShoppingBag className="h-5 w-5 text-white"/>            
+                            </span>
+                            Produtos
+                          </span>
                         </AccordionTrigger>
-                        <AccordionContent className="pl-4 flex flex-col gap-2">
+                        <AccordionContent className="pl-8 flex flex-col gap-2 mt-2 text-sm md:text-base text-muted-foreground">
                           <Link
                             href="/produtos/admin/novo-produto"
-                            className="text-sm text-muted-foreground hover:text-foreground"
+                            className="flex items-center gap-2 dark:text-white text-black hover:text-sunset transition-colors"
                           >
                             Adicionar Produto
                           </Link>
                           <Link
                             href="/produtos/admin/lista-produtos"
-                            className="text-sm text-muted-foreground hover:text-foreground"
+                            className="flex items-center gap-2 dark:text-white text-black hover:text-sunset transition-colors"
                           >
                             Listar Produtos
                           </Link>
@@ -181,6 +212,8 @@ export function Header() {
                 </SheetContent>
               </Sheet>
             )}
+
+
           </div>
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">

@@ -20,21 +20,27 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.9 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3 }}
-      whileHover={{ y: -4 }}
-      className="group bg-card border border-border/50 rounded-2xl overflow-hidden shadow-card hover:shadow-glow transition-all duration-300"
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      whileHover={{
+        scale: 1.03,
+        y: -6,
+        boxShadow: "0 15px 35px var(--color-sunset-dark)",
+        transition: { duration: 0.25, type: "spring", stiffness: 200, damping: 20 },
+      }}
+      className="group relative bg-card border border-border/50 rounded-2xl overflow-hidden shadow-card transition-all duration-300"
     >
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-muted">
-        <img
+        <motion.img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-300"
+          whileHover={{ scale: 1.07 }}
           loading="lazy"
         />
-        
+
         {/* Stock Badge */}
         <div className="absolute top-3 right-3">
           <Badge variant={product.inStock ? 'secondary' : 'destructive'} className="text-xs">
@@ -52,11 +58,11 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Content */}
       <div className="p-6">
-        <h3 className="font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
+        <h3 className="font-semibold text-lg text-foreground mb-2 group-hover:text-white transition-colors">
           {product.name}
         </h3>
-        
-        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+
+        <p className="text-sm text-muted-foreground mb-3 line-clamp-2 group-hover:text-white/90 transition-colors">
           {product.description}
         </p>
 
@@ -70,7 +76,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Price */}
-        <div className="text-2xl font-bold text-primary mb-4">
+        <div className="text-2xl font-bold text-primary mb-4 group-hover:text-white transition-colors">
           {formatPrice(product.price)}
         </div>
 
