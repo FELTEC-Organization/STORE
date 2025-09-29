@@ -20,33 +20,51 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 
-type TabDatasProps = {
-    onDataFilled?: (data: TCreateProductSchema) => void;
-};
+const {
+  register,
+  control,
+  handleSubmit,
+  reset,
+  setValue,
+  formState: { errors },
+} = useForm<TCreateProductSchema>({
+  resolver: zodResolver(productSchema),
+  defaultValues: {
+    name: "",
+    price: 0,
+    category: "",
+    stock: 0,
+    description: "",
+  },
+});
 
-export default function NewProduct({ onDataFilled }: TabDatasProps) {
-    const [authorized, setAuthorized] = useState(false);
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
-    const [photoResident, setPhotoResident] = useState<string | null>(null);
 
-    const {
-        register,
-        handleSubmit,
-        control,
-        setValue,
-        formState: { errors },
-        reset,
-    } = useForm<TCreateProductSchema>({
-        resolver: zodResolver(productSchema),
-        defaultValues: {
-            name: "",
-            price: 0,
-            category: "",
-            stock: 0,
-            description: "",
-        },
-    });
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://portfolio-produtos-feltec.onrender.com/api/Products";
+
+export async function apiRequest<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const userData = localStorage.getItem("@NPG-auth-user-data");
+  const token = userData ? JSON.parse(userData).token : null;
+
+  const res = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
+  });
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(error || "Erro ao comunicar com a API");
+  }
+
+  return res.json();
+}
+
 
     // Formatação de preço para reais
     const handlePriceChange = (value: string) => {
