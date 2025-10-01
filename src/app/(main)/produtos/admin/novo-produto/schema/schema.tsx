@@ -1,17 +1,12 @@
 import { z } from "zod";
 
 export const productSchema = z.object({
-  name: z.string().min(1, "O nome do produto é obrigatório"),
-  price: z
-    .number({ error: "Preço deve ser um número" })
-    .positive("Preço deve ser maior que 0"),
+  name: z.string().min(1, "Nome é obrigatório"),
+  price: z.number().min(0, "Preço deve ser maior ou igual a 0"), // continua number aqui
   category: z.string().min(1, "Categoria é obrigatória"),
-  stock: z
-    .number()
-    .int("Estoque deve ser inteiro")
-    .nonnegative("Estoque não pode ser negativo"),
+  stock: z.number().min(0, "Estoque deve ser maior ou igual a 0"),
   description: z.string().optional(),
+  tags: z.string().optional(),
 });
 
-// Tipagem inferida automaticamente a partir do schema
-export type TCreateProductSchema = z.infer<typeof productSchema>;
+export type ProductFormValues = z.infer<typeof productSchema>;

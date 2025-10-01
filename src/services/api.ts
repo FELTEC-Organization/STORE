@@ -1,5 +1,6 @@
-// src/services/api.ts
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://portfolio-produtos-feltec.onrender.com/api/Products";
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://portfolio-produtos-feltec.onrender.com/api";
 
 export async function apiRequest<T>(
   endpoint: string,
@@ -8,7 +9,7 @@ export async function apiRequest<T>(
   const userData = localStorage.getItem("@NPG-auth-user-data");
   const token = userData ? JSON.parse(userData).token : null;
 
-  const res = await fetch(`${API_URL}${endpoint}`, {
+  const res = await fetch(`${API_URL}/${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -17,10 +18,20 @@ export async function apiRequest<T>(
     },
   });
 
-  if (!res.ok) {
-    const error = await res.text();
-    throw new Error(error || "Erro ao comunicar com a API");
+  let data: any;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
   }
 
-  return res.json();
+  if (!res.ok) {
+    const message =
+      data?.message ||
+      data?.title ||
+      `Erro ${res.status}: ${res.statusText}`;
+    throw new Error(message);
+  }
+
+  return data as T;
 }
