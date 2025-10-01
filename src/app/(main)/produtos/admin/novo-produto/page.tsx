@@ -42,7 +42,7 @@ export default function ProductForm() {
   });
 
   // 🔹 Submissão
-  const onSubmit = async (data: ProductFormValues) => {
+  const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
     try {
       setLoading(true);
 
@@ -187,9 +187,9 @@ export default function ProductForm() {
                   labelKey="name"
                   valueKey="id"
                   placeholder="Selecione ou crie tags"
-                  multiple // permite múltiplas
-                  onChange={field.onChange}
-                  value={field.value ?? []}
+                  multiple
+                  onChange={(val: string[]) => setValue("tags", val)}
+                  value={watch("tags")}
                 />
               )}
             />
