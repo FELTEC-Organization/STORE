@@ -16,6 +16,8 @@ interface MultipleSelectProps<T> {
   labelKey: keyof T;
   valueKey: keyof T;
   placeholder?: string;
+  single?: boolean;   // 🔹 adiciona single
+  multiple?: boolean; // 🔹 adiciona multiple
 }
 
 export function MultipleSelect<T extends Record<string, any>>({
@@ -26,6 +28,8 @@ export function MultipleSelect<T extends Record<string, any>>({
   labelKey,
   valueKey,
   placeholder = "Select or create...",
+  single = false,
+  multiple = false,
 }: MultipleSelectProps<T>) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<T[]>([]);
@@ -52,55 +56,79 @@ export function MultipleSelect<T extends Record<string, any>>({
     <Controller
       control={control}
       name={name}
-      render={({ field }) => (
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn("w-full justify-between px-3 py-2 text-sm flex items-center")}
-            >
-              {field.value || placeholder}
-              <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 rounded-md border shadow-lg z-50">
-            <Command>
-              <CommandInput
-                placeholder="Search..."
-                value={inputValue}
-                onValueChange={setInputValue}
-              />
-              <CommandList>
-                <CommandEmpty>No items found.</CommandEmpty>
-                <CommandGroup>
-                  {items.map((item) => (
-                    <CommandItem
-                      key={item[valueKey]}
-                      value={item[labelKey]}
-                      onSelect={(val) => {
-                        field.onChange(val);
-                        setOpen(false);
-                      }}
-                    >
-                      {item[labelKey]}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-                {inputValue && !items.some((i) => i[labelKey].toLowerCase() === inputValue.toLowerCase()) && (
-                  <CommandItem
-                    value={inputValue}
-                    onSelect={handleCreate}
-                    className="text-primary"
-                  >
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Create "{inputValue}"
-                  </CommandItem>
-                )}
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      )}
+      render={({ field }) => {
+        const valueArray = Array.isArray(field.value)
+          ? field.value
+          : field.value
+          ? [field.value]
+          : [];
+
+        const handleSelect = (val: string) => {
+          if (single) {
+            field.onChange(val);
+          } else if (multiple) {
+            const newValues = valueArray.includes(val)
+              ? valueArray.filter((v) => v !== val)
+              : [...valueArray, val];
+            field.onChange(newValues);
+          }
+          setOpen(false);
+        };
+
+        return (
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full justify-between px-3 py-2 text-sm flex items-center"
+              >
+                {valueArray.length > 0
+                  ? valueArray.join(", ")
+                  : placeholder}
+                <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 rounded-md border shadow-lg z-50">
+              <Command>
+                <CommandInput
+                  placeholder="Search..."
+                  value={inputValue}
+                  onValueChange={setInputValue}
+                />
+                <CommandList>
+                  <CommandEmpty>No items found.</CommandEmpty>
+                  <CommandGroup>
+                    {items.map((item) => (
+                      <CommandItem
+                        key={item[valueKey]}
+                        value={item[labelKey]}
+                        onSelect={() => handleSelect(item[labelKey] as string)}
+                      >
+                        {item[labelKey]}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                  {inputValue &&
+                    !items.some(
+                      (i) =>
+                        i[labelKey].toLowerCase() ===
+                        inputValue.toLowerCase()
+                    ) && (
+                      <CommandItem
+                        value={inputValue}
+                        onSelect={handleCreate}
+                        className="text-primary"
+                      >
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Create "{inputValue}"
+                      </CommandItem>
+                    )}
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        );
+      }}
     />
   );
 }

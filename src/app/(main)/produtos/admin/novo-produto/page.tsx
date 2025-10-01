@@ -161,9 +161,9 @@ export default function ProductForm() {
                   labelKey="name"
                   valueKey="id"
                   placeholder="Selecione ou crie uma categoria"
-                  single // apenas uma categoria
-                  onChange={(val) => field.onChange(val)}
-                  value={field.value ? [field.value] : []}
+                  single
+                  onChange={(val: string) => setValue("category", val)}
+                  value={watch("category")} 
                 />
               )}
             />
