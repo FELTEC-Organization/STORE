@@ -1,35 +1,42 @@
+// app/(main)/produtos/admin/novo-produto/MultipleSelect.tsx
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Controller } from "react-hook-form";
+import React, { useEffect, useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button";
-import { Command, CommandInput, CommandList, CommandItem, CommandEmpty, CommandGroup } from "@/components/ui/command";
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandItem,
+  CommandEmpty,
+  CommandGroup,
+} from "@/components/ui/command";
 import { PlusCircle, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface MultipleSelectProps<T> {
-  control: any;
-  name: string;
+export interface MultipleSelectProps<T> {
+  value?: string | string[];
+  onChange?: (val: string | string[]) => void;
+  placeholder?: string;
+  single?: boolean;
+  multiple?: boolean;
   fetchItems: () => Promise<T[]>;
   createItem: (name: string) => Promise<T>;
   labelKey: keyof T;
   valueKey: keyof T;
-  placeholder?: string;
-  single?: boolean;   // 🔹 adiciona single
-  multiple?: boolean; // 🔹 adiciona multiple
 }
 
 export function MultipleSelect<T extends Record<string, any>>({
-  control,
-  name,
+  value,
+  onChange,
+  placeholder = "Select or create...",
+  single = false,
+  multiple = false,
   fetchItems,
   createItem,
   labelKey,
   valueKey,
-  placeholder = "Select or create...",
-  single = false,
-  multiple = false,
 }: MultipleSelectProps<T>) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<T[]>([]);
@@ -39,96 +46,133 @@ export function MultipleSelect<T extends Record<string, any>>({
   useEffect(() => {
     if (!open || fetched.current) return;
     fetched.current = true;
-    fetchItems().then(setItems).catch(console.error);
+    fetchItems()
+      .then((res) => setItems(res))
+      .catch((err) => {
+        console.error("Erro ao buscar opções:", err);
+      });
   }, [open, fetchItems]);
 
   const handleCreate = async () => {
+    if (!inputValue) return;
+
+    const alreadyExists = items.some(
+      (item) => String(item[labelKey]).toLowerCase() === inputValue.toLowerCase()
+    );
+
+    if (alreadyExists) {
+      // já existe — apenas fecha e não cria
+      setOpen(false);
+      setInputValue("");
+      return;
+    }
+
     try {
       const newItem = await createItem(inputValue);
-      setItems([...items, newItem]);
+      setItems((prev) => [...prev, newItem]);
+
+      const newVal = String(newItem[valueKey]);
+
+      if (single) {
+        onChange?.(newVal);
+      } else if (multiple) {
+        const current = Array.isArray(value) ? value.map(String) : [];
+        onChange?.([...current, newVal]);
+      }
+
       setInputValue("");
-    } catch (err) {
-      console.error(err);
+      setOpen(false);
+    } catch (err: any) {
+      // trate conflito/409 se necessário
+      console.error("Erro ao criar item:", err);
+      setOpen(false);
     }
   };
 
+  const handleSelect = (val: string) => {
+    if (single) {
+      onChange?.(val);
+    } else if (multiple) {
+      const current = Array.isArray(value) ? value.map(String) : [];
+      const exists = current.includes(val);
+      const updated = exists ? current.filter((v) => v !== val) : [...current, val];
+      onChange?.(updated);
+    }
+    setOpen(false);
+  };
+
+  const displayValue = (() => {
+    try {
+      if (single) {
+        if (value == null) return placeholder;
+        const found = items.find((i) => String(i[valueKey]) === String(value));
+        return found ? String(found[labelKey]) : placeholder;
+      } else {
+        const vals = Array.isArray(value) ? value.map(String) : [];
+        const labels = items
+          .filter((i) => vals.includes(String(i[valueKey])))
+          .map((i) => String(i[labelKey]));
+        return labels.length ? labels.join(", ") : placeholder;
+      }
+    } catch {
+      return placeholder;
+    }
+  })();
+
   return (
-    <Controller
-      control={control}
-      name={name}
-      render={({ field }) => {
-        const valueArray = Array.isArray(field.value)
-          ? field.value
-          : field.value
-          ? [field.value]
-          : [];
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn("w-full justify-between px-3 py-2 text-sm flex items-center")}
+        >
+          {displayValue}
+          <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+        </Button>
+      </PopoverTrigger>
 
-        const handleSelect = (val: string) => {
-          if (single) {
-            field.onChange(val);
-          } else if (multiple) {
-            const newValues = valueArray.includes(val)
-              ? valueArray.filter((v) => v !== val)
-              : [...valueArray, val];
-            field.onChange(newValues);
-          }
-          setOpen(false);
-        };
+      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 rounded-md border shadow-lg z-50">
+        <Command>
+          <CommandInput
+            value={inputValue}
+            onValueChange={setInputValue}
+            placeholder="Search..."
+          />
+          <CommandList>
+            <CommandEmpty>No items found.</CommandEmpty>
+            <CommandGroup>
+              {items.map((item) => {
+                const key = String(item[valueKey]);
+                const label = String(item[labelKey]);
+                return (
+                  <CommandItem
+                    key={key}
+                    value={key}
+                    onSelect={(val) => handleSelect(String(val))}
+                  >
+                    {label}
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
 
-        return (
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full justify-between px-3 py-2 text-sm flex items-center"
-              >
-                {valueArray.length > 0
-                  ? valueArray.join(", ")
-                  : placeholder}
-                <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 rounded-md border shadow-lg z-50">
-              <Command>
-                <CommandInput
-                  placeholder="Search..."
+            {inputValue &&
+              !items.some(
+                (i) => String(i[labelKey]).toLowerCase() === inputValue.toLowerCase()
+              ) && (
+                <CommandItem
+                  onSelect={() => handleCreate()}
+                  className="text-primary"
                   value={inputValue}
-                  onValueChange={setInputValue}
-                />
-                <CommandList>
-                  <CommandEmpty>No items found.</CommandEmpty>
-                  <CommandGroup>
-                    {items.map((item) => (
-                      <CommandItem
-                        key={item[valueKey]}
-                        value={item[labelKey]}
-                        onSelect={() => handleSelect(item[labelKey] as string)}
-                      >
-                        {item[labelKey]}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                  {inputValue &&
-                    !items.some(
-                      (i) =>
-                        i[labelKey].toLowerCase() ===
-                        inputValue.toLowerCase()
-                    ) && (
-                      <CommandItem
-                        value={inputValue}
-                        onSelect={handleCreate}
-                        className="text-primary"
-                      >
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Create "{inputValue}"
-                      </CommandItem>
-                    )}
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        );
-      }}
-    />
+                >
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Create "{inputValue}"
+                </CommandItem>
+              )}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }
+

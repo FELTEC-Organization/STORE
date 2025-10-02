@@ -6,13 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Save } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import SectionPhotos from "@/components/UploadPhotos";
+import SectionPhotos from "./SectionPhotos";
 import { useRouter } from "next/navigation";
 import { apiRequest } from "@/services/api";
 import { productSchema, ProductFormValues } from "./schema/schema";
-import { MultipleSelect } from "@/app/(main)/produtos/admin/novo-produto/MultipleSelect";
+import { MultipleSelect } from "./MultipleSelect";
 import { getCategories, postCategory } from "@/services/categories";
 import { getLabels, postLabel } from "@/services/labels";
 
@@ -28,32 +28,47 @@ export default function ProductForm() {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
-      price: 0,
-      category: "",
-      stock: 0,
+      price: undefined, // opcional
+      categoryId: 0,
+      labelId: undefined,
+      stock: undefined, // opcional
       description: "",
       tags: [],
     },
   });
 
-  // 🔹 Submissão
   const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
     try {
       setLoading(true);
 
-      const payload = {
+      const payload: any = {
         name: data.name,
-        price: data.price.toString(),
-        categoryId: Number(data.category), // categoria única
-        stock: data.stock,
         description: data.description || "",
-        tags: Array.isArray(data.tags) ? data.tags.map(Number) : [],
+        categoryId: Number(data.categoryId),
+        imageUrl: photoResident ?? null,
       };
+
+      if (data.price !== undefined && data.price !== null) {
+        payload.price = Number(data.price).toFixed(2);
+      }
+
+      if (data.stock !== undefined && data.stock !== null) {
+        payload.stock = data.stock;
+      }
+
+      if (data.labelId) {
+        payload.labelId = Number(data.labelId);
+      }
+
+      if (data.tags && data.tags.length > 0) {
+        payload.tags = data.tags;
+      }
 
       await apiRequest("Products", {
         method: "POST",
@@ -63,28 +78,19 @@ export default function ProductForm() {
       alert("Produto cadastrado com sucesso!");
       reset();
       setPhotoResident(null);
-    } catch (error: any) {
-      console.error(error);
-      alert(
-        "Erro ao cadastrar produto: " + (error.message || "Erro desconhecido")
-      );
+    } catch (err: any) {
+      console.error("Erro ao cadastrar:", err);
+      alert("Erro ao cadastrar produto: " + (err?.message ?? String(err)));
     } finally {
       setLoading(false);
     }
   };
 
-  // 🔹 Autorização
   useEffect(() => {
     const userData = localStorage.getItem("@NPG-auth-user-data");
-    if (!userData) {
-      router.push("/not-found");
-      return;
-    }
+    if (!userData) return router.push("/not-found");
     const parsed = JSON.parse(userData);
-    if (!parsed.token) {
-      router.push("/not-found");
-      return;
-    }
+    if (!parsed.token) return router.push("/not-found");
     setAuthorized(true);
   }, [router]);
 
@@ -101,7 +107,6 @@ export default function ProductForm() {
       <h1 className="text-2xl font-extrabold">Cadastro de Produto</h1>
 
       <div className="flex gap-4">
-        {/* Upload de Foto */}
         <div className="w-1/2">
           <SectionPhotos
             photoResident={photoResident}
@@ -109,9 +114,7 @@ export default function ProductForm() {
           />
         </div>
 
-        {/* Formulário */}
         <div className="w-1/2 flex flex-col gap-4">
-          {/* Nome */}
           <div>
             <Label htmlFor="name">Nome</Label>
             <Input id="name" {...register("name")} />
@@ -120,7 +123,6 @@ export default function ProductForm() {
             )}
           </div>
 
-          {/* Preço */}
           <div>
             <Label htmlFor="price">Preço</Label>
             <Controller
@@ -134,10 +136,13 @@ export default function ProductForm() {
                   step="0.01"
                   min={0}
                   value={field.value ?? ""}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    field.onChange(val === "" ? undefined : parseFloat(val));
-                  }}
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value === ""
+                        ? undefined
+                        : parseFloat(e.target.value),
+                    )
+                  }
                 />
               )}
             />
@@ -146,59 +151,68 @@ export default function ProductForm() {
             )}
           </div>
 
-          {/* Categoria (SingleSelect) */}
           <div>
-            <Label htmlFor="category">Categoria</Label>
-            <Controller
-              control={control}
-              name="category"
-              render={({ field }) => (
-                <MultipleSelect
-                  control={control}
-                  name="category"
-                  fetchItems={getCategories}
-                  createItem={postCategory}
-                  labelKey="name"
-                  valueKey="id"
-                  placeholder="Selecione ou crie uma categoria"
-                  single
-                  onChange={(val: string) => setValue("category", val)}
-                  value={watch("category")} 
-                />
-              )}
+            <Label htmlFor="categoryId">Categoria</Label>
+            <MultipleSelect
+              fetchItems={getCategories}
+              createItem={postCategory}
+              labelKey="name"
+              valueKey="id"
+              single
+              value={
+                watch("categoryId") ? String(watch("categoryId")) : undefined
+              }
+              onChange={(val) => setValue("categoryId", Number(val))}
+              placeholder="Selecione ou crie uma categoria"
             />
-            {errors.category && (
-              <span className="text-red-600">{errors.category.message}</span>
+            {errors.categoryId && (
+              <span className="text-red-600">{errors.categoryId.message}</span>
             )}
           </div>
 
-          {/* Tags (MultiSelect) */}
           <div>
+            <Label htmlFor="labelId">Label</Label>
+            <MultipleSelect
+              fetchItems={getLabels}
+              createItem={postLabel}
+              labelKey="name"
+              valueKey="name"
+              multiple
+              value={(watch("tags") ?? []).map(String)} // garante array de strings
+              onChange={(val) =>
+                setValue(
+                  "tags",
+                  Array.isArray(val) ? val.map(String) : [String(val)],
+                )
+              }
+              placeholder="Selecione ou crie tags (nomes)"
+            />
+          </div>
+
+          {/* <div>
             <Label htmlFor="tags">Tags</Label>
-            <Controller
-              control={control}
-              name="tags"
-              render={({ field }) => (
-                <MultipleSelect
-                  control={control}
-                  name="tags"
-                  fetchItems={getLabels}
-                  createItem={postLabel}
-                  labelKey="name"
-                  valueKey="id"
-                  placeholder="Selecione ou crie tags"
-                  multiple
-                  onChange={(val: string[]) => setValue("tags", val)}
-                  value={watch("tags")}
-                />
-              )}
+            <MultipleSelect
+              fetchItems={getLabels}
+              createItem={postLabel}
+              labelKey="name"
+              valueKey="name"
+              multiple
+              value={watch("tags") ?? []}
+              onChange={(val) =>
+                setValue(
+                  "tags",
+                  Array.isArray(val) ? val.map(String) : [String(val)],
+                )
+              }
+              placeholder="Selecione ou crie tags (nomes)"
             />
             {errors.tags && (
-              <span className="text-red-600">{errors.tags.message}</span>
+              <span className="text-red-600">
+                {(errors.tags as any)?.message}
+              </span>
             )}
-          </div>
+          </div> */}
 
-          {/* Estoque */}
           <div>
             <Label htmlFor="stock">Estoque</Label>
             <Controller
@@ -210,10 +224,13 @@ export default function ProductForm() {
                   type="number"
                   min={0}
                   value={field.value ?? ""}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    field.onChange(val === "" ? undefined : parseInt(val));
-                  }}
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value === ""
+                        ? undefined
+                        : parseInt(e.target.value),
+                    )
+                  }
                 />
               )}
             />
@@ -222,7 +239,6 @@ export default function ProductForm() {
             )}
           </div>
 
-          {/* Descrição */}
           <div>
             <Label htmlFor="description">Descrição</Label>
             <Textarea id="description" {...register("description")} />
@@ -233,7 +249,6 @@ export default function ProductForm() {
         </div>
       </div>
 
-      {/* Botão */}
       <div className="flex justify-end">
         <Button onClick={handleSubmit(onSubmit)} disabled={loading}>
           <Save className="mr-2" />
