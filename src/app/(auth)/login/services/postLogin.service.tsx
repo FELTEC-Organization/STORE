@@ -5,14 +5,10 @@ interface LoginPayload {
 
 interface LoginResponse {
   userId: number;
-  email: string;
   name: string;
+  email: string;
   token: string;
-  refreshToken: string;
-  version: string;
-  created: string;
-  expiration: string;
-  durationInSeconds: number;
+  refreshToken?: string;
 }
 
 // Função que consome o endpoint /api/login
@@ -27,5 +23,13 @@ export async function postLogin(data: { email: string; password: string }) {
     throw new Error("Credenciais inválidas");
   }
 
-  return res.json();
+  const json = await res.json();
+
+  return {
+    userId: json.user.id,
+    name: json.user.name,
+    email: json.user.email,
+    token: json.token,
+    // refreshToken: json.refreshToken,
+  };
 };

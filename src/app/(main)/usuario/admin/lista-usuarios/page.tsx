@@ -98,7 +98,7 @@ export default function ListUsers() {
         {/* Botões de ação */}
         <div className="flex gap-2">
           <Button
-            onClick={() => router.push("/users/user-profiles/create-profile")}
+            onClick={() => router.push("novo-usuario")}
             className="bg-sunset text-white px-4 py-2 rounded-lg shadow transition-all hover:-translate-y-0.5"
           >
             <SquarePlus className="w-4 h-4 mr-2" /> Criar novo usuário

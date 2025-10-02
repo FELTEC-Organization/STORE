@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SectionPhotos from "@/components/UploadPhotos";
 import { productSchema, TCreateProductSchema } from "./schema/schema";
+import { Textarea } from "@/components/ui/textarea";
 import { showToast } from "@/components/toast/showToast";
 import {
     Select,
@@ -17,7 +19,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
-import { createUser, CreateUserPayload } from "./services/createUser.services";
 
 type TabDatasProps = {
     onDataFilled?: (data: TCreateProductSchema) => void;
@@ -40,47 +41,54 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
         resolver: zodResolver(productSchema),
         defaultValues: {
             name: "",
-            email: "",
-            type: "",
+            price: 0,
+            category: "",
+            stock: 0,
+            description: "",
         },
     });
 
+    // Formatação de preço para reais
+    const handlePriceChange = (value: string) => {
+        // Remove tudo que não é número
+        const numericValue = value.replace(/\D/g, "");
+        // Converte para centavos e formata
+        const formatted = new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+        }).format(Number(numericValue) / 100);
+        setValue("price", Number(numericValue) / 100);
+        return formatted;
+    };
+
     const onSubmit = async (data: TCreateProductSchema) => {
+        setLoading(true);
         try {
-            const payload: CreateUserPayload = {
-                name: data.name,
-                email: data.email,
-                password: "12345", // temporario
-                role: data.type === "1" ? "Support" : data.type === "2" ? "Admin" : "User",
-            };
-
-            const createdUser = await createUser(payload);
-            console.log("Usuário criado:", createdUser);
-
+            console.log("Produto criado:", data);
             showToast({
                 type: "success",
-                title: "Usuário salvo com sucesso!",
-                description: "Os dados do usuário foram salvos.",
+                title: "Produto salvo com sucesso!",
+                description: "Os dados do produto foram salvos.",
             });
-
             onDataFilled?.(data);
             reset();
-
-            router.push("lista-usuarios");
         } catch (err) {
             showToast({
                 type: "error",
-                title: "Erro ao salvar usuário.",
-                description: "Ocorreu um erro ao tentar salvar os dados do usuário.",
+                title: "Erro ao salvar produto.",
+                description: "Ocorreu um erro ao tentar salvar os dados do produto.",
             });
+        } finally {
+            setLoading(false);
         }
     };
 
     // Opções fictícias de categoria
-    const typesUser = [
-        { id: "1", name: "Suporte" },
-        { id: "2", name: "Admin" },
-        { id: "3", name: "Usuário" },
+    const categories = [
+        { id: "eletronicos", name: "Eletrônicos" },
+        { id: "moveis", name: "Móveis" },
+        { id: "roupas", name: "Roupas" },
+        { id: "outros", name: "Outros" },
     ];
 
     useEffect(() => {
@@ -113,10 +121,10 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
                 <div className="flex flex-col gap-4">
                     <div className="text-center md:text-left mx-6">
                         <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-foreground mb-2">
-                            Cadastro de usuário
+                            Cadastro de Produto
                         </h1>
                         <p className="text-sm md:text-base !text-sunset">
-                            Preencha os dados do novo usuário
+                            Preencha os dados do produto e faça upload da foto
                         </p>
                     </div>
                     {/* Parte superior: SectionPhotos + Forms */}
@@ -130,12 +138,12 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
                         </div>
 
                         <div className="w-1/2 flex flex-col gap-4 space-y-4">
-                            {/* Nome do usuário */}
+                            {/* Nome do produto */}
                             <div className="flex flex-col space-y-2">
-                                <Label htmlFor="name">Nome do usuário</Label>
+                                <Label htmlFor="name">Nome do Produto</Label>
                                 <Input
                                     id="name"
-                                    placeholder="Nome do usuário"
+                                    placeholder="Nome do produto"
                                     {...register("name")}
                                 />
                                 {errors.name && (
@@ -145,40 +153,44 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
                                 )}
                             </div>
 
-                            {/* Email */}
+                            {/* Preço */}
                             <div className="flex flex-col space-y-2">
-                                <Label htmlFor="email">Email</Label>
+                                <Label htmlFor="price">Preço</Label>
                                 <Controller
                                     control={control}
-                                    name="email"
+                                    name="price"
                                     render={({ field }) => (
                                         <Input
                                             {...field}
-                                            id="email"
-                                            placeholder="usuario@email.com"
+                                            id="price"
+                                            placeholder="R$ 0,00"
+                                            onChange={(e) => {
+                                                const formatted = handlePriceChange(e.target.value);
+                                                e.target.value = formatted;
+                                            }}
                                         />
                                     )}
                                 />
-                                {errors.email && (
+                                {errors.price && (
                                     <span className="text-red-600 text-sm">
-                                        {errors.email.message}
+                                        {errors.price.message}
                                     </span>
                                 )}
                             </div>
 
-                            {/* Tipo de usuário como Select */}
+                            {/* Categoria como Select */}
                             <div className="flex flex-col space-y-2">
-                                <Label htmlFor="type">Tipo de usuário</Label>
+                                <Label htmlFor="category">Categoria</Label>
                                 <Controller
                                     control={control}
-                                    name="type"
+                                    name="category"
                                     render={({ field }) => (
                                         <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger id="type" className="w-full">
+                                            <SelectTrigger id="category" className="w-full">
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {typesUser.map((cat) => (
+                                                {categories.map((cat) => (
                                                     <SelectItem key={cat.id} value={cat.id}>
                                                         {cat.name}
                                                     </SelectItem>
@@ -187,9 +199,48 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
                                         </Select>
                                     )}
                                 />
-                                {errors.type && (
+                                {errors.category && (
                                     <span className="text-red-600 text-sm">
-                                        {errors.type.message}
+                                        {errors.category.message}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Estoque */}
+                            <div className="flex flex-col space-y-2">
+                                <Label htmlFor="stock">Estoque</Label>
+                                <Controller
+                                    control={control}
+                                    name="stock"
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            id="stock"
+                                            type="number"
+                                            placeholder="0"
+                                            step="1"
+                                        />
+                                    )}
+                                />
+                                {errors.stock && (
+                                    <span className="text-red-600 text-sm">
+                                        {errors.stock.message}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Descrição */}
+                            <div className="flex flex-col space-y-2 md:col-span-2">
+                                <Label htmlFor="description">Descrição</Label>
+                                <Textarea
+                                    id="description"
+                                    placeholder="Descrição do produto"
+                                    {...register("description")}
+                                    className="shadow-md"
+                                />
+                                {errors.description && (
+                                    <span className="text-red-600 text-sm">
+                                        {errors.description.message}
                                     </span>
                                 )}
                             </div>

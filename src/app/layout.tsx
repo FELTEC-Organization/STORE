@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "./provider";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -72,6 +73,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
           <main>{children}</main>
+
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: {
+                padding: "18px 16px 18px 16px",
+              },
+            }}
+            containerStyle={{
+              top: 76,
+              left: 20,
+              bottom: 20,
+              right: 20,
+            }}
+          />
         </Providers>
       </body>
     </html>

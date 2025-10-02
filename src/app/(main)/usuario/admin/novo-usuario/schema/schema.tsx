@@ -1,16 +1,12 @@
 import { z } from "zod";
 
 export const productSchema = z.object({
-  name: z.string().min(1, "O nome do produto é obrigatório"),
-  price: z
-    .number({ error: "Preço deve ser um número" })
-    .positive("Preço deve ser maior que 0"),
-  category: z.string().min(1, "Categoria é obrigatória"),
-  stock: z
-    .number()
-    .int("Estoque deve ser inteiro")
-    .nonnegative("Estoque não pode ser negativo"),
-  description: z.string().optional(),
+  name: z.string().min(1, "O nome do usuário é obrigatório"),
+  email: z
+    .string()
+    .min(1, "O email é obrigatório")
+    .email("Email inválido"),
+  type: z.string().min(1, "Tipo do usuário é obrigatório"),
 });
 
 // Tipagem inferida automaticamente a partir do schema

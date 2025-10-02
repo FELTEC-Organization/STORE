@@ -39,7 +39,7 @@ export const getColumns = (onRefresh: () => void): ColumnDef<any>[] => [
       <DataTableColumnHeader
         column={column}
         className="ml-4"
-        title={"Produtos"}
+        title={"Nome"}
       />
     ),
     cell: ({ row }) => {
@@ -48,42 +48,27 @@ export const getColumns = (onRefresh: () => void): ColumnDef<any>[] => [
   },
 
   {
-    accessorKey: "price",
+    accessorKey: "email",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} className="ml-4" title={"Preço"} />
+      <DataTableColumnHeader column={column} className="ml-4" title={"Email"} />
     ),
     cell: ({ row }) => {
-      return <span className="font-normal ml-4">{row.getValue("price")}</span>;
+      return <span className="font-normal ml-4">{row.getValue("email")}</span>;
     },
+    enableSorting: false,
   },
 
   {
-    accessorKey: "stock",
+    accessorKey: "role",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
         className="ml-4"
-        title={"Estoque"}
+        title={"Tipo de usuário"}
       />
     ),
     cell: ({ row }) => {
-      return <span className="font-normal ml-4">{row.getValue("stock")}</span>;
-    },
-  },
-
-  {
-    accessorKey: "category",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        className="ml-4"
-        title={"Categoria"}
-      />
-    ),
-    cell: ({ row }) => {
-      return (
-        <span className="font-normal ml-4">{row.getValue("category")}</span>
-      );
+      return <span className="font-normal ml-4">{row.getValue("role")}</span>;
     },
     enableSorting: false,
   },
