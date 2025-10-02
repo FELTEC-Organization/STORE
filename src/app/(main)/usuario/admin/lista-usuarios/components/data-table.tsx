@@ -22,13 +22,13 @@ import { DataTablePagination } from "./data-table-pagination";
 import { DataTableLoading } from "./data-table-skeleton";
 import { showToast } from "@/components/toast/showToast";
 import { getColumns } from "./columns";
-import { fetchProducts, Product } from "../services/adminProducts.service";
+import { getUsers, User } from "../services/listUser.services";
 
 type DataTableProps = {
   filters: {
     value?: string;
   };
-  onSelectionChange?: (selectedItems: Product[]) => void;
+  onSelectionChange?: (selectedItems: User[]) => void;
   onRefresh?: (refetchTable: () => void) => void;
 };
 
@@ -38,7 +38,7 @@ export function DataTable({ filters, onSelectionChange }: DataTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [data, setData] = useState<Product[]>([]);
+  const [data, setData] = useState<User[]>([]);
   const [totalItems, setTotalItems] = useState(0);
 
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -58,11 +58,7 @@ export function DataTable({ filters, onSelectionChange }: DataTableProps) {
   const getList = async () => {
     setLoading(true);
     try {
-      const resp = await fetchProducts({
-        currentPage: pagination.pageIndex + 1,
-        pageSize: pagination.pageSize,
-        value,
-      });
+      const resp = await getUsers();
 
       setData(resp.items);
       setTotalItems(resp.totalItems);
