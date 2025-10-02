@@ -7,11 +7,7 @@ export interface AuthResponseCore {
   email: string;
   name: string;
   token: string;
-  refreshToken: string;
-  version: string;
-  created: string;
-  expiration: string;
-  durationInSeconds: number;
+  refreshToken?: string;
 }
 
 // Define o formato do contexto de autenticação
