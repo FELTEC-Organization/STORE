@@ -53,11 +53,6 @@ export default function LoginPage() {
         name: String(response.name),
         email: response.email,
         token: response.token,
-        refreshToken: response.refreshToken,
-        version: response.version,
-        created: response.created,
-        expiration: response.expiration,
-        durationInSeconds: response.durationInSeconds,
       };
 
       // 🔥 Salva antes do redirect
