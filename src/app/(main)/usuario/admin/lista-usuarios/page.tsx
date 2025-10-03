@@ -63,7 +63,7 @@ export default function ListUsers() {
             Um administrador pode conceder permissões e gerenciar o acesso de outros usuários, mantendo o limite de 3 contas ativas conforme definido.
           </p>
           <Button
-            className="bg-sunset text-white px-6 py-3 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 hover:scale-105"
+            className="bg-sunset text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:bg-sunset-dark hover:-translate-y-0.5"
             onClick={() => router.push("/users/user-profiles/create-profile")}
           >
             <SquarePlus className="w-5 h-5 mr-2" /> Adicionar Novo Usuário
@@ -99,7 +99,7 @@ export default function ListUsers() {
         <div className="flex gap-2">
           <Button
             onClick={() => router.push("novo-usuario")}
-            className="bg-sunset text-white px-4 py-2 rounded-lg shadow transition-all hover:-translate-y-0.5"
+            className="bg-sunset text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:bg-sunset-dark hover:-translate-y-0.5"
           >
             <SquarePlus className="w-4 h-4 mr-2" /> Criar novo usuário
           </Button>

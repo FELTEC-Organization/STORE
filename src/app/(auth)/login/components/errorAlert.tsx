@@ -18,7 +18,7 @@ export default function ErrorAlert({
   message,
   keyId,
   durationBlocked = 120000,
-  duration = 4000,
+  duration = 6000,
   isBlocked = false,
   onClose,
 }: ErrorAlertProps) {
@@ -78,7 +78,7 @@ export default function ErrorAlert({
 
   return (
     <div
-      className={`flex flex-col gap-1 bg-nc-stt-red-200 dark:bg-nc-stt-red-950 p-6 rounded-md shadow-sm relative
+      className={`flex flex-col gap-1 bg-red-900 p-6 rounded-md shadow-sm relative
         transition-opacity duration-300 ease-in-out opacity-100 visible`}
       style={{ minHeight: "96px" }}
     >
@@ -86,12 +86,12 @@ export default function ErrorAlert({
         <XCircle size={24} className="text-nc-stt-red-600" />
         <div>
           <strong className="block text-sm font-semibold">
-            {message || ("invalidCredentialsTitle")}
+            {message || ("Reveja suas credenciais e tente novamente!")}
           </strong>
           <span className="text-sm font-normal">
             {countdownSeconds !== null
-              ? `${("Try again")} ${formatTime(countdownSeconds)}`
-              : ("invalidCredentialsMessage")}
+              ? `${("Tente novamente")} ${formatTime(countdownSeconds)}`
+              : ("Credenciais inválidas")}
           </span>
         </div>
       </div>

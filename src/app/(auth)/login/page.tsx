@@ -55,25 +55,23 @@ export default function LoginPage() {
         token: response.token,
       };
 
-      // 🔥 Salva antes do redirect
+      // Salva dados em localStorage
       localstorageService.saveUserIsLogged(userData);
-      console.log("✅ Dados salvos no localStorage:", userData);
 
       // Atualiza contexto
       handleSetUser(userData);
 
       router.push("/");
     } catch (error) {
-      console.error("❌ Erro no login:", error);
       setLoading(false);
       setLoginAttempts((prev) => {
         const next = prev + 1;
         if (next >= MAX_ATTEMPTS) {
           setIsLoginBlocked(true);
-          setErrorMessage("Many Attempts");
+          setErrorMessage("Muitas tentativas");
           setShowError(true);
         } else {
-          setErrorMessage("invalidCredentialsTitle");
+          setErrorMessage("Reveja suas credenciais e tente novamente!");
           setShowError(true);
         }
         return next;
@@ -85,17 +83,18 @@ export default function LoginPage() {
     <AuthLayout>
       {loading ? (
         <div className="flex flex-col gap-6">
-          <div className="mt-24">
-            <h2 className="text-nc-base-800 dark:text-nc-base-200 font-semibold text-lg">
-              Welcome!
+          <div className="my-14 text-left">
+            <h2 className="text-sunset font-semibold text-6xl">
+              Bem-vindo!
             </h2>
-            <h1 className="text-nc-base-600 dark:text-nc-base-400 font-bold text-2xl">
-              Login
+            <h1 className="font-bold">
+              Acesse sua conta para continuar suas compras ou gerenciar seu
+              perfil na Mauve Store.
             </h1>
           </div>
           <div className="flex flex-col gap-4">
-            <h2 className="text-nc-base-600 dark:text-nc-base-400 font-medium text-xl">
-              Enter data
+            <h2 className="font-medium text-xl">
+              Verificando seu acesso
             </h2>
             <div className="flex items-center justify-center min-h-[300px]">
               <div className="loader" />
@@ -105,13 +104,13 @@ export default function LoginPage() {
       ) : (
         <>
           <div className="flex flex-col gap-6 text-foreground">
-            <div className="my-24 text-left">
+            <div className="my-14 text-left">
               <h2 className="text-sunset font-semibold text-6xl">
                 Bem-vindo de volta!
               </h2>
-              <h1 className="text-nc-base-600 dark:text-nc-base-400 font-bold ">
+              <h1 className="font-bold">
                 Acesse sua conta para continuar suas compras ou gerenciar seu
-                perfil na Lorem Store.
+                perfil na Mauve Store.
               </h1>
             </div>
 
@@ -139,7 +138,7 @@ export default function LoginPage() {
               message={errorMessage ?? undefined}
               isBlocked={isLoginBlocked}
               durationBlocked={120000}
-              duration={4000}
+              duration={6000}
               onClose={() => setShowError(false)}
             />
           </div>
