@@ -106,7 +106,7 @@ export default function LoginPage() {
           <div className="flex flex-col gap-6 text-foreground">
             <div className="my-14 text-left">
               <h2 className="text-sunset font-semibold text-6xl">
-                Bem-vindo de volta!
+                Bem-vindo!
               </h2>
               <h1 className="font-bold">
                 Acesse sua conta para continuar suas compras ou gerenciar seu
