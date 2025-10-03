@@ -289,7 +289,7 @@ export function Header() {
                         <button
                           key={color}
                           onClick={() => handleChangeBaseColor(color)}
-                          className={`w-6 h-6 rounded-full border-2 transition 
+                          className={`w-5 h-5 rounded-full border-1 transition 
                         ${selected ? "ring-1 ring-white border-white" : "border-gray-400"}`}
                           style={{ background: color }}
                           title={label} // acessibilidade para leitor de tela
