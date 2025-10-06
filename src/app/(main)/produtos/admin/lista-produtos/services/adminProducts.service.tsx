@@ -25,42 +25,39 @@ export async function fetchProducts(params?: {
   pageSize?: number;
   value?: string;
 }): Promise<PaginatedProducts> {
-  const allProducts: Product[] = [
-    { id: 1, name: "Camiseta Básica", price: 49.9, stock: 120, category: "Roupas" },
-    { id: 2, name: "Tênis Esportivo", price: 199.9, stock: 50, category: "Calçados" },
-    { id: 3, name: "Mochila Escolar", price: 89.9, stock: 200, category: "Acessórios" },
-    { id: 4, name: "Relógio Digital", price: 299.9, stock: 15, category: "Acessórios" },
-    { id: 5, name: "Jaqueta Jeans", price: 149.9, stock: 40, category: "Roupas" },
-  ];
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://portfolio-produtos-feltec.onrender.com/index.html/products";
+  const token = localStorage.getItem("@NPG-auth-token");
 
-  const pageSize = params?.pageSize || 10;
-  const currentPage = params?.currentPage || 1;
-  const filterValue = params?.value?.toLowerCase() || "";
+  const url = new URL(baseUrl);
+  url.searchParams.append("page", String(params?.currentPage || 1));
+  url.searchParams.append("pageSize", String(params?.pageSize || 10));
 
-  // Filtrando produtos pelo valor
-  const filtered = allProducts.filter(
-    (p) =>
-      p.name.toLowerCase().includes(filterValue) ||
-      p.category.toLowerCase().includes(filterValue)
-  );
+  if (params?.value) url.searchParams.append("name", params.value);
 
-  // Paginação
-  const start = (currentPage - 1) * pageSize;
-  const pagedItems = filtered.slice(start, start + pageSize);
-  const totalItems = filtered.length;
-  const totalPages = Math.ceil(totalItems / pageSize);
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        items: pagedItems,
-        currentPage,
-        pageSize,
-        totalItems,
-        totalPages,
-        hasPreviousPage: currentPage > 1,
-        hasNextPage: currentPage < totalPages,
-      });
-    }, 500); // delay simulado
+  const res = await fetch(url.toString(), {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token ? `Bearer ${token}` : "",
+    },
   });
+
+  if (!res.ok) throw new Error("Erro ao buscar produtos");
+
+  const data = await res.json();
+
+  return {
+    items: data.items.map((p: any) => ({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      stock: p.stock,
+      category: p.category?.name || "-",
+    })),
+    currentPage: data.page,
+    pageSize: data.pageSize,
+    totalItems: data.totalItems,
+    totalPages: Math.ceil(data.totalItems / data.pageSize),
+    hasPreviousPage: data.page > 1,
+    hasNextPage: data.page < Math.ceil(data.totalItems / data.pageSize),
+  };
 }

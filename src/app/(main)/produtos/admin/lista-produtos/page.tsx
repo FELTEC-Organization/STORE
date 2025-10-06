@@ -17,7 +17,7 @@ export default function ListProducts() {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
   // Chave para forçar a atualização da tabela
-  const [refetchTable, setRefetchTable] = useState<() => void>(() => () => { });
+  const [refetchTable, setRefetchTable] = useState<() => void>(() => () => {});
 
   const [appliedFilters, setAppliedFilters] = useState<{ value?: string }>({
     value: "",
@@ -60,11 +60,12 @@ export default function ListProducts() {
           </h2>
           <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg">
             Controle e organize seu inventário de produtos de forma eficiente.
-            Adicione, edite e remova itens com facilidade para manter seus dados sempre atualizados.
+            Adicione, edite e remova itens com facilidade para manter seus dados
+            sempre atualizados.
           </p>
           <Button
             className="bg-sunset text-white px-6 py-3 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 hover:scale-105"
-            onClick={() => router.push("/users/user-profiles/create-profile")}
+            onClick={() => router.push("/produtos/admin/novo-produto")}
           >
             <SquarePlus className="w-5 h-5 mr-2" /> Adicionar Novo Produto
           </Button>
@@ -98,7 +99,7 @@ export default function ListProducts() {
         {/* Botões de ação */}
         <div className="flex gap-2">
           <Button
-            onClick={() => router.push("/users/user-profiles/create-profile")}
+            onClick={() => router.push("/produtos/admin/novo-produto")}
             className="bg-sunset text-white px-4 py-2 rounded-lg shadow transition-all hover:-translate-y-0.5"
           >
             <SquarePlus className="w-4 h-4 mr-2" /> Criar novo produto
@@ -117,5 +118,5 @@ export default function ListProducts() {
         />
       </div>
     </>
-  )
+  );
 }
