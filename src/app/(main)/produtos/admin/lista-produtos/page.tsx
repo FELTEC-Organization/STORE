@@ -12,6 +12,7 @@ import Image from "next/image";
 export default function ListProducts() {
   const [authorized, setAuthorized] = useState(false);
   const router = useRouter();
+  
 
   const [productName, setProductName] = useState("");
   const [selectedRows, setSelectedRows] = useState<any[]>([]);

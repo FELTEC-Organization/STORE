@@ -25,7 +25,9 @@ export async function fetchProducts(params?: {
   pageSize?: number;
   value?: string;
 }): Promise<PaginatedProducts> {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://portfolio-produtos-feltec.onrender.com/index.html/products";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://portfolio-produtos-feltec.onrender.com/api/Products/public";
   const token = localStorage.getItem("@NPG-auth-token");
 
   const url = new URL(baseUrl);

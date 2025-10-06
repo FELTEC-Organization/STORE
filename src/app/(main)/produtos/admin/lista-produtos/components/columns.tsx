@@ -53,7 +53,16 @@ export const getColumns = (onRefresh: () => void): ColumnDef<any>[] => [
       <DataTableColumnHeader column={column} className="ml-4" title={"Preço"} />
     ),
     cell: ({ row }) => {
-      return <span className="font-normal ml-4">{row.getValue("price")}</span>;
+      const value = row.getValue("price");
+      const formattedPrice =
+        value !== undefined && value !== null
+          ? Number(value).toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })
+          : "-";
+
+      return <span className="font-normal ml-4">{formattedPrice}</span>;
     },
   },
 

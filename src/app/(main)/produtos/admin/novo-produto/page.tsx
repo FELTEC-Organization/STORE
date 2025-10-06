@@ -34,10 +34,10 @@ export default function ProductForm() {
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
-      price: undefined, // opcional
+      price: undefined,
       categoryId: 0,
       labelId: undefined,
-      stock: undefined, // opcional
+      stock: undefined,
       description: "",
       tags: [],
     },
@@ -128,23 +128,32 @@ export default function ProductForm() {
             <Controller
               control={control}
               name="price"
-              render={({ field }) => (
-                <Input
-                  id="price"
-                  placeholder="R$ 0,00"
-                  type="number"
-                  step="0.01"
-                  min={0}
-                  value={field.value ?? ""}
-                  onChange={(e) =>
-                    field.onChange(
-                      e.target.value === ""
-                        ? undefined
-                        : parseFloat(e.target.value),
-                    )
-                  }
-                />
-              )}
+              render={({ field }) => {
+                const formatCurrency = (value: number | undefined) => {
+                  if (value === undefined || isNaN(value)) return "";
+                  return value.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  });
+                };
+
+                const parseCurrency = (value: string) => {
+                  if (!value) return undefined;
+                  const cleaned = value.replace(/[^\d,.-]/g, "").replace(",", ".");
+                  const number = parseFloat(cleaned);
+                  return isNaN(number) ? undefined : number;
+                };
+
+                return (
+                  <Input
+                    id="price"
+                    placeholder="R$ 0,00"
+                    type="text"
+                    value={formatCurrency(field.value)}
+                    onChange={(e) => field.onChange(parseCurrency(e.target.value))}
+                  />
+                );
+              }}
             />
             {errors.price && (
               <span className="text-red-600">{errors.price.message}</span>
@@ -159,9 +168,7 @@ export default function ProductForm() {
               labelKey="name"
               valueKey="id"
               single
-              value={
-                watch("categoryId") ? String(watch("categoryId")) : undefined
-              }
+              value={watch("categoryId") ? String(watch("categoryId")) : undefined}
               onChange={(val) => setValue("categoryId", Number(val))}
               placeholder="Selecione ou crie uma categoria"
             />
@@ -178,40 +185,13 @@ export default function ProductForm() {
               labelKey="name"
               valueKey="name"
               multiple
-              value={(watch("tags") ?? []).map(String)} // garante array de strings
+              value={(watch("tags") ?? []).map(String)}
               onChange={(val) =>
-                setValue(
-                  "tags",
-                  Array.isArray(val) ? val.map(String) : [String(val)],
-                )
+                setValue("tags", Array.isArray(val) ? val.map(String) : [String(val)])
               }
               placeholder="Selecione ou crie tags (nomes)"
             />
           </div>
-
-          {/* <div>
-            <Label htmlFor="tags">Tags</Label>
-            <MultipleSelect
-              fetchItems={getLabels}
-              createItem={postLabel}
-              labelKey="name"
-              valueKey="name"
-              multiple
-              value={watch("tags") ?? []}
-              onChange={(val) =>
-                setValue(
-                  "tags",
-                  Array.isArray(val) ? val.map(String) : [String(val)],
-                )
-              }
-              placeholder="Selecione ou crie tags (nomes)"
-            />
-            {errors.tags && (
-              <span className="text-red-600">
-                {(errors.tags as any)?.message}
-              </span>
-            )}
-          </div> */}
 
           <div>
             <Label htmlFor="stock">Estoque</Label>
@@ -226,9 +206,7 @@ export default function ProductForm() {
                   value={field.value ?? ""}
                   onChange={(e) =>
                     field.onChange(
-                      e.target.value === ""
-                        ? undefined
-                        : parseInt(e.target.value),
+                      e.target.value === "" ? undefined : parseInt(e.target.value)
                     )
                   }
                 />
