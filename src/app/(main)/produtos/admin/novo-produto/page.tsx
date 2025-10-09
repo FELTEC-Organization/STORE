@@ -8,13 +8,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Save } from "lucide-react";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import SectionPhotos from "./SectionPhotos";
+import SectionPhotos from "@/components/UploadPhotos";
 import { useRouter } from "next/navigation";
 import { apiRequest } from "@/services/api";
 import { productSchema, ProductFormValues } from "./schema/schema";
 import { MultipleSelect } from "./MultipleSelect";
 import { getCategories, postCategory } from "@/services/categories";
 import { getLabels, postLabel } from "@/services/labels";
+import { showToast } from "@/components/toast/showToast";
 
 export default function ProductForm() {
   const router = useRouter();
@@ -42,6 +43,17 @@ export default function ProductForm() {
       tags: [],
     },
   });
+
+  // Formatação de preço como no antigo
+  const formatPriceInput = (value: string) => {
+    const numericValue = value.replace(/\D/g, "");
+    const formatted = new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(Number(numericValue) / 100);
+    setValue("price", Number(numericValue) / 100);
+    return formatted;
+  };
 
   const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
     try {
@@ -75,12 +87,21 @@ export default function ProductForm() {
         body: JSON.stringify(payload),
       });
 
-      alert("Produto cadastrado com sucesso!");
+      showToast({
+        type: "success",
+        title: "Produto cadastrado!",
+        description: "Os dados do produto foram salvos com sucesso.",
+      });
+
       reset();
       setPhotoResident(null);
     } catch (err: any) {
       console.error("Erro ao cadastrar:", err);
-      alert("Erro ao cadastrar produto: " + (err?.message ?? String(err)));
+      showToast({
+        type: "error",
+        title: "Erro ao cadastrar produto",
+        description: err?.message ?? String(err),
+      });
     } finally {
       setLoading(false);
     }
@@ -104,63 +125,77 @@ export default function ProductForm() {
         </div>
       )}
 
-      <h1 className="text-2xl font-extrabold">Cadastro de Produto</h1>
+      {/* Cabeçalho */}
+      <div className="text-center md:text-left mx-6">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-2">
+          Cadastro de Produto
+        </h1>
+        <p className="text-sm md:text-base !text-sunset">
+          Preencha os dados do produto e faça upload da foto
+        </p>
+      </div>
 
+      {/* SectionPhotos + Form */}
       <div className="flex gap-4">
-        <div className="w-1/2">
+        {/* SectionPhotos à esquerda */}
+        <div className="flex w-1/2 px-4">
           <SectionPhotos
             photoResident={photoResident}
             setPhotoResident={setPhotoResident}
           />
         </div>
 
-        <div className="w-1/2 flex flex-col gap-4">
-          <div>
-            <Label htmlFor="name">Nome</Label>
-            <Input id="name" {...register("name")} />
+        {/* Formulário à direita */}
+        <div className="w-1/2 flex flex-col space-y-4">
+          {/* Nome */}
+          <div className="flex flex-col space-y-2">
+            <Label htmlFor="name">Nome do Produto</Label>
+            <Input
+              id="name"
+              placeholder="Nome do produto"
+              {...register("name")}
+            />
             {errors.name && (
-              <span className="text-red-600">{errors.name.message}</span>
+              <span className="text-red-600 text-sm">
+                {errors.name.message}
+              </span>
             )}
           </div>
 
-          <div>
+          {/* Preço */}
+          <div className="flex flex-col space-y-2">
             <Label htmlFor="price">Preço</Label>
             <Controller
               control={control}
               name="price"
-              render={({ field }) => {
-                const formatCurrency = (value: number | undefined) => {
-                  if (value === undefined || isNaN(value)) return "";
-                  return value.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  });
-                };
-
-                const parseCurrency = (value: string) => {
-                  if (!value) return undefined;
-                  const cleaned = value.replace(/[^\d,.-]/g, "").replace(",", ".");
-                  const number = parseFloat(cleaned);
-                  return isNaN(number) ? undefined : number;
-                };
-
-                return (
-                  <Input
-                    id="price"
-                    placeholder="R$ 0,00"
-                    type="text"
-                    value={formatCurrency(field.value)}
-                    onChange={(e) => field.onChange(parseCurrency(e.target.value))}
-                  />
-                );
-              }}
+              render={({ field }) => (
+                <Input
+                  id="price"
+                  placeholder="R$ 0,00"
+                  type="text"
+                  value={
+                    field.value
+                      ? new Intl.NumberFormat("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        }).format(field.value)
+                      : ""
+                  }
+                  onChange={(e) =>
+                    field.onChange(formatPriceInput(e.target.value))
+                  }
+                />
+              )}
             />
             {errors.price && (
-              <span className="text-red-600">{errors.price.message}</span>
+              <span className="text-red-600 text-sm">
+                {errors.price.message}
+              </span>
             )}
           </div>
 
-          <div>
+          {/* Categoria */}
+          <div className="flex flex-col space-y-2">
             <Label htmlFor="categoryId">Categoria</Label>
             <MultipleSelect
               fetchItems={getCategories}
@@ -168,17 +203,22 @@ export default function ProductForm() {
               labelKey="name"
               valueKey="id"
               single
-              value={watch("categoryId") ? String(watch("categoryId")) : undefined}
+              value={
+                watch("categoryId") ? String(watch("categoryId")) : undefined
+              }
               onChange={(val) => setValue("categoryId", Number(val))}
               placeholder="Selecione ou crie uma categoria"
             />
             {errors.categoryId && (
-              <span className="text-red-600">{errors.categoryId.message}</span>
+              <span className="text-red-600 text-sm">
+                {errors.categoryId.message}
+              </span>
             )}
           </div>
 
-          <div>
-            <Label htmlFor="labelId">Label</Label>
+          {/* Tags */}
+          <div className="flex flex-col space-y-2">
+            <Label htmlFor="labelId">Tags</Label>
             <MultipleSelect
               fetchItems={getLabels}
               createItem={postLabel}
@@ -187,13 +227,17 @@ export default function ProductForm() {
               multiple
               value={(watch("tags") ?? []).map(String)}
               onChange={(val) =>
-                setValue("tags", Array.isArray(val) ? val.map(String) : [String(val)])
+                setValue(
+                  "tags",
+                  Array.isArray(val) ? val.map(String) : [String(val)],
+                )
               }
               placeholder="Selecione ou crie tags (nomes)"
             />
           </div>
 
-          <div>
+          {/* Estoque */}
+          <div className="flex flex-col space-y-2">
             <Label htmlFor="stock">Estoque</Label>
             <Controller
               control={control}
@@ -203,32 +247,49 @@ export default function ProductForm() {
                   id="stock"
                   type="number"
                   min={0}
+                  placeholder="0"
                   value={field.value ?? ""}
                   onChange={(e) =>
                     field.onChange(
-                      e.target.value === "" ? undefined : parseInt(e.target.value)
+                      e.target.value === ""
+                        ? undefined
+                        : parseInt(e.target.value),
                     )
                   }
                 />
               )}
             />
             {errors.stock && (
-              <span className="text-red-600">{errors.stock.message}</span>
+              <span className="text-red-600 text-sm">
+                {errors.stock.message}
+              </span>
             )}
           </div>
 
-          <div>
+          {/* Descrição */}
+          <div className="flex flex-col space-y-2">
             <Label htmlFor="description">Descrição</Label>
-            <Textarea id="description" {...register("description")} />
+            <Textarea
+              id="description"
+              placeholder="Descrição do produto"
+              {...register("description")}
+            />
             {errors.description && (
-              <span className="text-red-600">{errors.description.message}</span>
+              <span className="text-red-600 text-sm">
+                {errors.description.message}
+              </span>
             )}
           </div>
         </div>
       </div>
 
+      {/* Botão salvar */}
       <div className="flex justify-end">
-        <Button onClick={handleSubmit(onSubmit)} disabled={loading}>
+        <Button
+          onClick={handleSubmit(onSubmit)}
+          disabled={loading}
+          variant="sunset"
+        >
           <Save className="mr-2" />
           {loading ? "Salvando..." : "Salvar"}
         </Button>
