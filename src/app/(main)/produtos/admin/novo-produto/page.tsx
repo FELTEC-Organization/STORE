@@ -121,7 +121,7 @@ export default function ProductForm() {
     <div className="space-y-6 p-4">
       {loading && (
         <div className="absolute inset-0 bg-background bg-opacity-50 flex items-center justify-center z-10">
-          <div className="w-12 h-12 border-4 border-gray-200 rounded-full animate-spin" />
+          <div className="loader" />
         </div>
       )}
 

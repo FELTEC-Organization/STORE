@@ -19,11 +19,7 @@ import {
 import { useRouter } from "next/navigation";
 import { createUser, CreateUserPayload } from "./services/createUser.services";
 
-type TabDatasProps = {
-    onDataFilled?: (data: TCreateProductSchema) => void;
-};
-
-export default function NewUser({ onDataFilled }: TabDatasProps) {
+export default function NewUser() {
     const [authorized, setAuthorized] = useState(false);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
@@ -46,6 +42,7 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
     });
 
     const onSubmit = async (data: TCreateProductSchema) => {
+        setLoading(true);
         try {
             const payload: CreateUserPayload = {
                 name: data.name,
@@ -63,9 +60,7 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
                 description: "Os dados do usuário foram salvos.",
             });
 
-            onDataFilled?.(data);
             reset();
-
             router.push("lista-usuarios");
         } catch (err) {
             showToast({
@@ -73,6 +68,8 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
                 title: "Erro ao salvar usuário.",
                 description: "Ocorreu um erro ao tentar salvar os dados do usuário.",
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -105,7 +102,7 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
         <>
             {loading && (
                 <div className="absolute inset-0 bg-background bg-opacity-50 flex items-center justify-center z-10">
-                    <div className="w-12 h-12 border-4 border-gray-200 rounded-full animate-spin" />
+                    <div className="loader" />
                 </div>
             )}
 
