@@ -107,7 +107,6 @@ export default function ListProducts() {
         <div className="overflow-x-auto mt-2 pb-4">
           <DataTable
             filters={appliedFilters}
-            columns={getColumns(() => refetchTable?.())}
             onSelectionChange={setSelectedRows}
             onRefresh={(setRefetch) => setRefetchTable(() => setRefetch)}
           />
