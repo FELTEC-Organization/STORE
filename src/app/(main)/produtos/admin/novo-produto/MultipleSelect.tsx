@@ -1,4 +1,3 @@
-// app/(main)/produtos/admin/novo-produto/MultipleSelect.tsx
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -166,7 +165,7 @@ export function MultipleSelect<T extends Record<string, any>>({
                   value={inputValue}
                 >
                   <PlusCircle className="mr-2 h-4 w-4" />
-                  Create "{inputValue}"
+                  Create {inputValue}
                 </CommandItem>
               )}
           </CommandList>
