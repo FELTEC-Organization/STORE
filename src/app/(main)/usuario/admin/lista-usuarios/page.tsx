@@ -58,7 +58,7 @@ export default function ListUsers() {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground drop-shadow-sm">
             Gerenciamento de Usuários
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg">
+          <p className="text-gray-700 dark:text-gray-300 md:text-lg">
             Gerencie e controle o acesso de usuários de forma eficiente.
             Um administrador pode conceder permissões e gerenciar o acesso de outros usuários, mantendo o limite de 3 contas ativas conforme definido.
           </p>
@@ -82,39 +82,41 @@ export default function ListUsers() {
         </div>
       </div>
 
-      {/* Filtros e busca */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-8 p-4 bg-background rounded-lg shadow-md">
-        {/* Campo de busca */}
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input
-            placeholder="Buscar usuários..."
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
-            className="pl-10 border border-border/30 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg transition-all w-full"
+      <div className="bg-muted rounded-lg shadow-md">
+        {/* Filtros e busca */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-8 p-4">
+          {/* Campo de busca */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Input
+              placeholder="Buscar usuários..."
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              className="pl-10 border border-border/30 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg transition-all w-full"
+            />
+          </div>
+
+          {/* Botões de ação */}
+          <div className="flex gap-2">
+            <Button
+              onClick={() => router.push("novo-usuario")}
+              className="bg-sunset text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:bg-sunset-dark hover:-translate-y-0.5"
+            >
+              <SquarePlus className="w-4 h-4 mr-2" /> Criar novo usuário
+            </Button>
+          </div>
+        </div>
+
+        {/* Tabela de dados */}
+        <div className="overflow-x-auto mt-2 pb-4">
+          <DataTable
+            filters={appliedFilters}
+            onSelectionChange={setSelectedRows}
+            onRefresh={(setRefetch) => {
+              setRefetchTable(() => setRefetch);
+            }}
           />
         </div>
-
-        {/* Botões de ação */}
-        <div className="flex gap-2">
-          <Button
-            onClick={() => router.push("novo-usuario")}
-            className="bg-sunset text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:bg-sunset-dark hover:-translate-y-0.5"
-          >
-            <SquarePlus className="w-4 h-4 mr-2" /> Criar novo usuário
-          </Button>
-        </div>
-      </div>
-
-      {/* Tabela de dados */}
-      <div className="overflow-x-auto mt-2 pb-4 rounded-lg bg-background">
-        <DataTable
-          filters={appliedFilters}
-          onSelectionChange={setSelectedRows}
-          onRefresh={(setRefetch) => {
-            setRefetchTable(() => setRefetch);
-          }}
-        />
       </div>
     </>
   )

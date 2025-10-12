@@ -1,4 +1,4 @@
-import { Trash2, PencilLine } from "lucide-react";
+import { Trash2, SquarePen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { showToast } from "@/components/toast/showToast";
 import {
@@ -59,7 +59,7 @@ export function RoutesActionsCell({
 							router.push(`editar-usuario/${row.original.id}`)
 						}
 					>
-						<PencilLine />
+						<SquarePen />
 					</Button>
 				</TooltipTrigger>
 				<TooltipContent>Editar</TooltipContent>

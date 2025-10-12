@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash2, PencilLine } from "lucide-react";
+import { Trash2, SquarePen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { showToast } from "@/components/toast/showToast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -44,7 +44,7 @@ export function RoutesActionsCell({ row, onRefresh }: { row: any; onRefresh: () 
 						className="hover:text-nc-base-400"
 						onClick={() => router.push(`/produtos/admin/editar-produto/${row.original.id}`)}
 					>
-						<PencilLine />
+						<SquarePen />
 					</Button>
 				</TooltipTrigger>
 				<TooltipContent>Editar</TooltipContent>

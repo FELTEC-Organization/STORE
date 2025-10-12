@@ -176,9 +176,9 @@ export default function ProductForm() {
                   value={
                     field.value
                       ? new Intl.NumberFormat("pt-BR", {
-                          style: "currency",
-                          currency: "BRL",
-                        }).format(field.value)
+                        style: "currency",
+                        currency: "BRL",
+                      }).format(field.value)
                       : ""
                   }
                   onChange={(e) =>
@@ -229,7 +229,7 @@ export default function ProductForm() {
               onChange={(val) =>
                 setValue(
                   "tags",
-                  Array.isArray(val) ? val.map(String) : [String(val)],
+                  Array.isArray(val) ? val.map(String) : [String(val)]
                 )
               }
               placeholder="Selecione ou crie tags (nomes)"
@@ -253,7 +253,7 @@ export default function ProductForm() {
                     field.onChange(
                       e.target.value === ""
                         ? undefined
-                        : parseInt(e.target.value),
+                        : parseInt(e.target.value)
                     )
                   }
                 />

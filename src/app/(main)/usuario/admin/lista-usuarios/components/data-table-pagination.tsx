@@ -35,7 +35,7 @@ export function DataTablePagination<TData>({
 	// const { t } = useTranslation();
 
 	return (
-		<div className="flex w-full items-center">
+		<div className="flex w-full items-center px-4">
 			<div className="flex-1">
 				{showRowCount && (
 					<div className="text-muted-foreground text-sm">

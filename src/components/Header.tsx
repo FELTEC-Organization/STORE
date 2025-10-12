@@ -16,6 +16,8 @@ import {
   MessageCircle,
   UsersRound,
   ShoppingBag,
+  LogOut,
+  UserRoundPen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/use-theme";
@@ -86,6 +88,10 @@ export function Header() {
     router.push("/login");
   };
 
+  const goToSettings = () => {
+    router.push("/configuracao-de-usuario");
+  };
+
   const handleChangeBaseColor = (color: string) => {
     setSelectedColor(color);
     localStorage.setItem("color-base", color);
@@ -152,7 +158,7 @@ export function Header() {
                         value="users"
                         className="rounded-xl transition-colors shadow-md"
                       >
-                        <AccordionTrigger className="flex justify-between items-center text-base md:text-lg font-semibold text-foreground hover:text-sunset transition-colors">
+                        <AccordionTrigger className="flex justify-between items-center text-xl font-semibold text-foreground hover:text-sunset transition-colors">
                           <span className="flex items-center">
                             {/* Ícone opcional */}
                             <span className="flex items-center justify-center h-8 w-8 bg-sunset rounded-full mx-2">
@@ -161,7 +167,7 @@ export function Header() {
                             Controle de Usuários
                           </span>
                         </AccordionTrigger>
-                        <AccordionContent className="pl-8 flex flex-col gap-2 mt-2 text-sm md:text-base text-muted-foreground">
+                        <AccordionContent className="pl-8 flex flex-col gap-4 mt-2 md:text-base text-muted-foreground">
                           <Link
                             href="/usuario/admin/novo-usuario"
                             className="flex items-center gap-2 dark:text-white text-black hover:text-sunset transition-colors"
@@ -184,15 +190,15 @@ export function Header() {
                         value="products"
                         className="rounded-xl transition-colors shadow-md"
                       >
-                        <AccordionTrigger className="flex justify-between items-center text-base md:text-lg font-semibold text-foreground hover:text-sunset transition-colors">
+                        <AccordionTrigger className="flex justify-between items-center text-xl font-semibold text-foreground hover:text-sunset transition-colors">
                           <span className="flex items-center">
                             <span className="flex items-center justify-center h-8 w-8 bg-sunset rounded-full mx-2">
-                              <ShoppingBag className="h-5 w-5 text-white"/>            
+                              <ShoppingBag className="h-5 w-5 text-white" />
                             </span>
                             Produtos
                           </span>
                         </AccordionTrigger>
-                        <AccordionContent className="pl-8 flex flex-col gap-2 mt-2 text-sm md:text-base text-muted-foreground">
+                        <AccordionContent className="pl-8 flex flex-col gap-4 mt-2 md:text-base text-muted-foreground">
                           <Link
                             href="/produtos/admin/novo-produto"
                             className="flex items-center gap-2 dark:text-white text-black hover:text-sunset transition-colors"
@@ -266,50 +272,61 @@ export function Header() {
                   </div>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent className="rounded shadow-lg min-w-[var(--radix-dropdown-menu-trigger-width)]">
-                  <DropdownMenuLabel >
-                    Accessibilidade
+                <DropdownMenuContent className="rounded-lg shadow-lg min-w-[var(--radix-dropdown-menu-trigger-width)]">
+                  {/* Personalização de Cor */}
+                  <DropdownMenuLabel className="px-2 font-normal">
+                    Personalização de cor
                   </DropdownMenuLabel>
 
-                  <span className="px-3 text-xs text-gray-300 flex gap-1">
-                    <Palette className="h-4 w-4" />
-                    Cor predominante
-                  </span>
-                  <div className="flex gap-2 px-3 py-2">
+                  <div className="flex gap-2 items-center justify-center py-2">
                     {[
-                      { color: "#f7b801", label: ("Yellow") },
-                      { color: "#db504a", label: ("Jasper") },
-                      { color: "#7678ed", label: ("Slate blue") },
-                      { color: "#66cccc", label: ("Aqua green") },
-                      { color: "#339933", label: ("Green") },
-                      { color: "#FE7F2D", label: ("Sunset") },
+                      { color: "#f7b801", label: "Yellow" },
+                      { color: "#db504a", label: "Jasper" },
+                      { color: "#7678ed", label: "Slate Blue" },
+                      { color: "#66cccc", label: "Aqua Green" },
+                      { color: "#339933", label: "Green" },
+                      { color: "#FE7F2D", label: "Sunset" },
                     ].map(({ color, label }) => {
                       const selected = selectedColor === color;
                       return (
                         <button
                           key={color}
                           onClick={() => handleChangeBaseColor(color)}
-                          className={`w-5 h-5 rounded-full border-1 transition 
-                        ${selected ? "ring-1 ring-white border-white" : "border-gray-400"}`}
-                          style={{ background: color }}
-                          title={label} // acessibilidade para leitor de tela
+                          className={`
+                            w-4 h-4 rounded-full border transition
+                            ${selected ? "ring-2 ring-offset-1 ring-adventure border-white" : "border-gray-400"}
+                            hover:ring-2 hover:ring-offset-1 hover:ring-gray-300 cursor-pointer
+                          `}
+                          style={{ backgroundColor: color }}
+                          title={label}
+                          aria-label={`Selecionar cor ${label}`}
                         />
                       );
                     })}
                   </div>
 
-                  <DropdownMenuSeparator className=" border-nc-base-400" />
+                  <DropdownMenuSeparator className="border-nc-base-400" />
 
-                  <DropdownMenuItem onClick={handleLogout}>
-                    Logout
+                  {/* Configurações de Conta */}
+                  <DropdownMenuItem onClick={goToSettings} className="flex items-center justify-between cursor-pointer">
+                    Configurações de conta <UserRoundPen />
                   </DropdownMenuItem>
 
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator className="border-nc-base-400" />
 
-                  <DropdownMenuLabel className="text-xs">
-                    Version {process.env.NEXT_PUBLIC_APP_VERSION}
+                  {/* Logout */}
+                  <DropdownMenuItem onClick={handleLogout} className="flex items-center justify-between cursor-pointer">
+                    Sair da conta <LogOut />
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator className="border-nc-base-400" />
+
+                  {/* Versão */}
+                  <DropdownMenuLabel className="text-xs text-center text-sunset-dark px-3 py-2">
+                    Versão {process.env.NEXT_PUBLIC_APP_VERSION}
                   </DropdownMenuLabel>
                 </DropdownMenuContent>
+
               </DropdownMenu>
             )}
 

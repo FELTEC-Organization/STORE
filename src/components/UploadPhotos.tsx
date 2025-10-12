@@ -31,7 +31,9 @@ type PhotoContentProps = {
   onSave: (image: string) => void;
 };
 
-// Componente genérico de conteúdo da foto
+// ===============================
+// COMPONENTE INTERNO PhotoContent
+// ===============================
 function PhotoContent({
   icon,
   placeholderText,
@@ -40,35 +42,50 @@ function PhotoContent({
 }: PhotoContentProps) {
   const webcamRef = useRef<Webcam>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // const { t } = useTranslation();
 
-  const [capturedImage, setCapturedImage] = useState<string | null>(
-    initialImage
-  );
+  const [capturedImage, setCapturedImage] = useState<string | null>(initialImage);
   const [openWebcam, setOpenWebcam] = useState(false);
-  const [confirmedImage, setConfirmedImage] = useState<string | null>(
-    initialImage
-  );
+  const [confirmedImage, setConfirmedImage] = useState<string | null>(initialImage);
 
+  // Captura imagem da webcam
   const capture = () => {
     const imageSrc = webcamRef.current?.getScreenshot();
     if (imageSrc) setCapturedImage(imageSrc);
   };
 
+  // Abre a webcam
   const handleWebcamClick = () => {
     setOpenWebcam(true);
     setCapturedImage(null);
     setConfirmedImage(null);
   };
 
+  // Upload tradicional via input
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
+  // Leitura de imagem selecionada
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    readFile(file);
+  };
 
+  // Leitura de imagem arrastada
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+    readFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  // Função genérica para ler arquivo e converter para base64
+  const readFile = (file: File) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64String = reader.result as string;
@@ -76,11 +93,12 @@ function PhotoContent({
       setConfirmedImage(base64String);
       onSave(base64String);
     };
-    reader.readAsDataURL(file); // Converte a imagem para Base64
+    reader.readAsDataURL(file);
   };
 
   return (
     <div className="flex flex-col items-center">
+      {/* Se a webcam estiver aberta */}
       {openWebcam ? (
         capturedImage ? (
           <>
@@ -88,14 +106,13 @@ function PhotoContent({
               src={capturedImage}
               alt="Captura"
               className="rounded-md border"
-              width={300}
-              height={280}
+              width={384}
+              height={288}
             />
             <div className="flex gap-2 mt-2">
-              <Button variant="outline" onClick={() => setCapturedImage(null)}>
-                {"Refazer"}
-              </Button>
+              <Button onClick={() => setCapturedImage(null)}>Refazer</Button>
               <Button
+                variant="sunset"
                 onClick={() => {
                   if (capturedImage) {
                     setConfirmedImage(capturedImage);
@@ -104,7 +121,7 @@ function PhotoContent({
                   }
                 }}
               >
-                {"Confirmar"}
+                Confirmar
               </Button>
             </div>
           </>
@@ -122,23 +139,24 @@ function PhotoContent({
               screenshotFormat="image/jpeg"
               videoConstraints={{ facingMode: "user" }}
               className="rounded-md border"
-              width={300}
-              height={280}
+              width={384}
+              height={288}
             />
-            <Button className="mt-2" variant="outline" onClick={capture}>
-              <Camera /> {"Capturar"}
+            <Button className="mt-2" variant="adventure" onClick={capture}>
+              <Camera /> Capturar
             </Button>
           </div>
         )
       ) : capturedImage ? (
+        // Se já tiver imagem capturada
         <div className="relative inline-block">
           <img
             src={capturedImage}
             alt="Captura"
-            className="rounded-md border object-cover w-80 h-60"
+            className="rounded-md border object-cover h-72 w-96"
           />
           <Button
-            className="absolute -top-1 -right-1 p-2 rounded-full bg-trasparent hover:bg-transparent"
+            className="absolute -top-1 -right-1 p-2 rounded-full bg-transparent hover:bg-transparent"
             onClick={() => {
               setCapturedImage(null);
               setConfirmedImage(null);
@@ -149,19 +167,27 @@ function PhotoContent({
           </Button>
         </div>
       ) : (
-        <div className="border rounded-md p-8 flex flex-col items-center justify-center my-2 h-70 w-70">
+        // Placeholder + área de drop
+        <div
+          className="border border-adventure rounded-md p-8 flex flex-col items-center justify-center my-2 h-72 w-96 transition-colors hover:bg-muted/50 cursor-pointer"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
           {icon}
-          <p className="mt-2 text-muted-foreground text-sm">
-            {placeholderText}
+          <p className="mt-2 text-muted-foreground text-sm text-center">
+            {placeholderText} <br />
+            <span className="text-xs text-muted-foreground/70">
+              (Arraste e solte uma imagem aqui)
+            </span>
           </p>
         </div>
       )}
 
+      {/* Botões inferiores */}
       {!openWebcam && (
         <div className="flex gap-2 mt-4">
-          {/* Botão de upload */}
-          <Button variant="outline" onClick={handleUploadClick}>
-            <Upload /> {"Enviar foto"}
+          <Button variant="adventure" onClick={handleUploadClick}>
+            <Upload /> Enviar foto
           </Button>
           <input
             type="file"
@@ -170,10 +196,8 @@ function PhotoContent({
             onChange={handleFileUpload}
             className="hidden"
           />
-
-          {/* Botão de webcam */}
-          <Button variant="outline" onClick={handleWebcamClick}>
-            <WebcamIcon /> {"Webcam"}
+          <Button variant="adventure" onClick={handleWebcamClick}>
+            <WebcamIcon /> Webcam
           </Button>
         </div>
       )}
@@ -181,28 +205,27 @@ function PhotoContent({
   );
 }
 
+// ==========================
+// COMPONENTE PRINCIPAL
+// ==========================
 export default function SectionPhotos({
   photoResident,
   setPhotoResident,
 }: SectionPhotosProps) {
-  // const { t } = useTranslation();
   const [modalType, setModalType] = useState<"resident" | null>(null);
   const [open, setOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+  // Abre modal
   const openModal = (type: "resident") => {
     setModalType(type);
     setPreviewImage(photoResident);
     setOpen(true);
   };
 
-  const closeModal = () => {
-    setOpen(false);
-  };
-
+  // Salva imagem confirmada
   const handleSave = (image: string) => {
     const displayImage =
-      // biome-ignore lint/complexity/useOptionalChain: <explanation>
       image && image.startsWith("data:")
         ? image
         : image
@@ -210,18 +233,37 @@ export default function SectionPhotos({
         : null;
 
     if (modalType === "resident") setPhotoResident(displayImage);
-    closeModal();
+    setOpen(false);
+  };
+
+  // Drag-and-drop direto no botão principal
+  const handleDrop = (e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setPhotoResident(base64String);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault();
   };
 
   return (
     <>
+      {/* Área principal de foto */}
       <div className="flex flex-1 p-1">
         <Button
-          className="flex-1 flex flex-col justify-center items-center outline bg-zinc-200 dark:bg-zinc-900 
-          dark:hover:bg-zinc-800 
-          transition-colors duration-200
-          overflow-hidden text-black dark:text-white hover:bg-muted h-full min-h-[442] w-96"
+          className="flex-1 flex flex-col justify-center items-center outline bg-muted dark:bg-zinc-900 
+          dark:hover:bg-zinc-800 transition-colors duration-200 overflow-hidden
+          text-black dark:text-white hover:bg-white h-full min-h-96 w-96 relative"
           onClick={() => openModal("resident")}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
         >
           {photoResident ? (
             <img
@@ -232,23 +274,17 @@ export default function SectionPhotos({
           ) : (
             <>
               <ImageUp className="!w-6 !h-6 text-nc-neutral-700" />
-              <span>{"Foto"}</span>
+              <span>Arraste ou clique para adicionar foto</span>
             </>
           )}
         </Button>
       </div>
 
-      <Dialog
-        open={open}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            setOpen(false);
-          }
-        }}
-      >
-        <DialogContent className="min-w-2xl">
+      {/* Modal de captura/upload */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="min-w-3xl">
           <DialogHeader>
-            <DialogTitle>Fazer o upload de foto</DialogTitle>
+            <DialogTitle className="text-xl">Carregar foto</DialogTitle>
           </DialogHeader>
 
           {modalType && (
@@ -260,7 +296,7 @@ export default function SectionPhotos({
                   <FileLock2 className="w-6 h-6 text-muted-foreground" />
                 )
               }
-              placeholderText={"Foto"}
+              placeholderText="Foto"
               initialImage={previewImage}
               onSave={setPreviewImage}
             />
@@ -268,10 +304,10 @@ export default function SectionPhotos({
 
           <DialogFooter className="mt-5">
             <Button onClick={() => setOpen(false)}>
-              <X /> {"Cancelar"}
+              <X /> Cancelar
             </Button>
-            <Button onClick={() => handleSave(previewImage || "")}>
-              <Save /> {"Salvar"}
+            <Button variant="sunset" onClick={() => handleSave(previewImage || "")}>
+              <Save /> Salvar
             </Button>
           </DialogFooter>
         </DialogContent>

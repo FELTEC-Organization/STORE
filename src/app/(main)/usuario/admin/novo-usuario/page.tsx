@@ -122,7 +122,7 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
                     {/* Parte superior: SectionPhotos + Forms */}
                     <div className="flex gap-4">
                         {/* SectionPhotos à esquerda */}
-                        <div className="w-1/2 px-4">
+                        <div className="flex w-1/2 px-4">
                             <SectionPhotos
                                 photoResident={photoResident}
                                 setPhotoResident={setPhotoResident}

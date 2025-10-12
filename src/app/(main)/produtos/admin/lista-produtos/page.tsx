@@ -16,7 +16,7 @@ export default function ListProducts() {
 
   const [productName, setProductName] = useState("");
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
-  const [refetchTable, setRefetchTable] = useState<() => void>(() => () => {});
+  const [refetchTable, setRefetchTable] = useState<() => void>(() => () => { });
 
   const [appliedFilters, setAppliedFilters] = useState<{ value?: string }>({
     value: "",
@@ -54,13 +54,13 @@ export default function ListProducts() {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground drop-shadow-sm">
             Gerenciamento de Produtos
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg">
+          <p className="text-gray-700 dark:text-gray-300 md:text-lg">
             Controle e organize seu inventário de produtos de forma eficiente.
             Adicione, edite e remova itens com facilidade para manter seus dados
             sempre atualizados.
           </p>
           <Button
-            className="bg-sunset text-white px-6 py-3 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 hover:scale-105"
+            className="bg-sunset text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:bg-sunset-dark hover:-translate-y-0.5"
             onClick={() => router.push("/produtos/admin/novo-produto")}
           >
             <SquarePlus className="w-5 h-5 mr-2" /> Adicionar Novo Produto
@@ -78,36 +78,40 @@ export default function ListProducts() {
         </div>
       </div>
 
-      {/* Filtros */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-8 p-4 bg-background rounded-lg shadow-md">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input
-            placeholder="Buscar produtos..."
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
-            className="pl-10 border border-border/30 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg transition-all w-full"
+      <div className="bg-muted rounded-lg shadow-md">
+        {/* Filtros e busca */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-8 p-4">
+          {/* Campo de busca */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Input
+              placeholder="Buscar produtos..."
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              className="pl-10 border border-border/30 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg transition-all w-full"
+            />
+          </div>
+
+          {/* Botões de ação */}
+          <div className="flex gap-2">
+            <Button
+              onClick={() => router.push("/produtos/admin/novo-produto")}
+              className="bg-sunset text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:bg-sunset-dark hover:-translate-y-0.5"
+            >
+              <SquarePlus className="w-4 h-4 mr-2" /> Criar novo produto
+            </Button>
+          </div>
+        </div>
+
+        {/* Tabela de dados*/}
+        <div className="overflow-x-auto mt-2 pb-4">
+          <DataTable
+            filters={appliedFilters}
+            columns={getColumns(() => refetchTable?.())}
+            onSelectionChange={setSelectedRows}
+            onRefresh={(setRefetch) => setRefetchTable(() => setRefetch)}
           />
         </div>
-
-        <div className="flex gap-2">
-          <Button
-            onClick={() => router.push("/produtos/admin/novo-produto")}
-            className="bg-sunset text-white px-4 py-2 rounded-lg shadow transition-all hover:-translate-y-0.5"
-          >
-            <SquarePlus className="w-4 h-4 mr-2" /> Criar novo produto
-          </Button>
-        </div>
-      </div>
-
-      {/* Tabela */}
-      <div className="overflow-x-auto mt-2 pb-4 rounded-lg bg-background">
-        <DataTable
-          filters={appliedFilters}
-          columns={getColumns(() => refetchTable?.())}
-          onSelectionChange={setSelectedRows}
-          onRefresh={(setRefetch) => setRefetchTable(() => setRefetch)}
-        />
       </div>
     </>
   );

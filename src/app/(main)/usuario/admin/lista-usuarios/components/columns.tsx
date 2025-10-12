@@ -7,8 +7,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 // 	const { t } = useTranslation();
 // 	return t(text);
 // }
+const headerClass = "ml-4 bg-gradient-to-r from-orange-400 via-pink-500 to-red-500 text-white";
 
 export const getColumns = (onRefresh: () => void): ColumnDef<any>[] => [
+  
   // Seleção de linhas
   {
     id: "select",
@@ -75,7 +77,7 @@ export const getColumns = (onRefresh: () => void): ColumnDef<any>[] => [
 
   {
     accessorKey: "action",
-    header: () => <div className="mr-6 flex justify-end">{"Ações"}</div>,
+    header: () => <div className="mr-8 flex justify-end">{"Ações"}</div>,
     cell: ({ row }) => (
       <RoutesActionsCell
         row={row}
