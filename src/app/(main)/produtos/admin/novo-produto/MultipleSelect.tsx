@@ -1,8 +1,11 @@
-// app/(main)/produtos/admin/novo-produto/MultipleSelect.tsx
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -43,48 +46,35 @@ export function MultipleSelect<T extends Record<string, any>>({
   const [inputValue, setInputValue] = useState("");
   const fetched = useRef(false);
 
+  // 🔹 1. Carrega os itens automaticamente na montagem (não apenas quando abre)
   useEffect(() => {
-    if (!open || fetched.current) return;
+    if (fetched.current) return;
     fetched.current = true;
-    fetchItems()
-      .then((res) => setItems(res))
-      .catch((err) => {
-        console.error("Erro ao buscar opções:", err);
-      });
-  }, [open, fetchItems]);
+    fetchItems().then(setItems).catch(console.error);
+  }, [fetchItems]);
 
   const handleCreate = async () => {
     if (!inputValue) return;
-
-    const alreadyExists = items.some(
-      (item) => String(item[labelKey]).toLowerCase() === inputValue.toLowerCase()
-    );
-
-    if (alreadyExists) {
-      // já existe — apenas fecha e não cria
+    if (
+      items.some(
+        (i) => String(i[labelKey]).toLowerCase() === inputValue.toLowerCase(),
+      )
+    ) {
       setOpen(false);
       setInputValue("");
       return;
     }
-
     try {
       const newItem = await createItem(inputValue);
       setItems((prev) => [...prev, newItem]);
-
       const newVal = String(newItem[valueKey]);
-
-      if (single) {
-        onChange?.(newVal);
-      } else if (multiple) {
-        const current = Array.isArray(value) ? value.map(String) : [];
-        onChange?.([...current, newVal]);
-      }
-
+      if (single) onChange?.(newVal);
+      if (multiple)
+        onChange?.([...(Array.isArray(value) ? value : []), newVal]);
       setInputValue("");
       setOpen(false);
-    } catch (err: any) {
-      // trate conflito/409 se necessário
-      console.error("Erro ao criar item:", err);
+    } catch (err) {
+      console.error(err);
       setOpen(false);
     }
   };
@@ -92,39 +82,44 @@ export function MultipleSelect<T extends Record<string, any>>({
   const handleSelect = (val: string) => {
     if (single) {
       onChange?.(val);
+      setOpen(false);
     } else if (multiple) {
-      const current = Array.isArray(value) ? value.map(String) : [];
-      const exists = current.includes(val);
-      const updated = exists ? current.filter((v) => v !== val) : [...current, val];
-      onChange?.(updated);
+      const arr = Array.isArray(value) ? [...value] : [];
+      const exists = arr.includes(val);
+      onChange?.(exists ? arr.filter((v) => v !== val) : [...arr, val]);
     }
-    setOpen(false);
   };
 
+  // 🔹 2. Atualiza labels quando os itens ou valores mudam
   const displayValue = (() => {
-    try {
-      if (single) {
-        if (value == null) return placeholder;
-        const found = items.find((i) => String(i[valueKey]) === String(value));
-        return found ? String(found[labelKey]) : placeholder;
-      } else {
-        const vals = Array.isArray(value) ? value.map(String) : [];
-        const labels = items
-          .filter((i) => vals.includes(String(i[valueKey])))
-          .map((i) => String(i[labelKey]));
-        return labels.length ? labels.join(", ") : placeholder;
-      }
-    } catch {
-      return placeholder;
+    if (!items.length) return placeholder;
+    if (single) {
+      if (!value) return placeholder;
+      const found = items.find((i) => String(i[valueKey]) === String(value));
+      return found ? String(found[labelKey]) : placeholder;
+    } else {
+      const vals = Array.isArray(value) ? value : [];
+      const labels = items
+        .filter((i) => vals.includes(String(i[valueKey])))
+        .map((i) => String(i[labelKey]));
+      return labels.length ? labels.join(", ") : placeholder;
     }
   })();
+
+  // 🔹 3. Quando o valor muda externamente, tenta sincronizar novamente
+  useEffect(() => {
+    if (!fetched.current) return;
+    if (Array.isArray(value) && multiple) setItems((prev) => [...prev]);
+  }, [value, multiple]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={cn("w-full justify-between px-3 py-2 text-sm flex items-center")}
+          className={cn(
+            "w-full justify-between px-3 py-2 text-sm flex items-center",
+          )}
         >
           {displayValue}
           <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
@@ -144,24 +139,31 @@ export function MultipleSelect<T extends Record<string, any>>({
               {items.map((item) => {
                 const key = String(item[valueKey]);
                 const label = String(item[labelKey]);
+                const selected =
+                  multiple && Array.isArray(value)
+                    ? value.includes(key)
+                    : value === key;
+
                 return (
                   <CommandItem
                     key={key}
                     value={key}
-                    onSelect={(val) => handleSelect(String(val))}
+                    onSelect={() => handleSelect(key)}
+                    className={cn(selected && "bg-muted")}
                   >
                     {label}
                   </CommandItem>
                 );
               })}
             </CommandGroup>
-
             {inputValue &&
               !items.some(
-                (i) => String(i[labelKey]).toLowerCase() === inputValue.toLowerCase()
+                (i) =>
+                  String(i[labelKey]).toLowerCase() ===
+                  inputValue.toLowerCase(),
               ) && (
                 <CommandItem
-                  onSelect={() => handleCreate()}
+                  onSelect={handleCreate}
                   className="text-primary"
                   value={inputValue}
                 >
@@ -175,4 +177,3 @@ export function MultipleSelect<T extends Record<string, any>>({
     </Popover>
   );
 }
-

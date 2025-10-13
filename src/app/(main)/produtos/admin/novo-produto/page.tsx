@@ -1,20 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Save } from "lucide-react";
-import { Controller, useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import SectionPhotos from "@/components/UploadPhotos";
-import { useRouter } from "next/navigation";
-import { apiRequest } from "@/services/api";
-import { productSchema, ProductFormValues } from "./schema/schema";
 import { MultipleSelect } from "./MultipleSelect";
+import { apiRequest } from "@/services/api";
 import { getCategories, postCategory } from "@/services/categories";
 import { getLabels, postLabel } from "@/services/labels";
+import { productSchema, ProductFormValues } from "./schema/schema";
 import { showToast } from "@/components/toast/showToast";
 
 export default function ProductForm() {
@@ -44,17 +45,6 @@ export default function ProductForm() {
     },
   });
 
-  // Formatação de preço como no antigo
-  const formatPriceInput = (value: string) => {
-    const numericValue = value.replace(/\D/g, "");
-    const formatted = new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(Number(numericValue) / 100);
-    setValue("price", Number(numericValue) / 100);
-    return formatted;
-  };
-
   const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
     try {
       setLoading(true);
@@ -66,22 +56,12 @@ export default function ProductForm() {
         imageUrl: photoResident ?? null,
       };
 
-      if (data.price !== undefined && data.price !== null) {
-        payload.price = Number(data.price).toFixed(2);
-      }
-
-      if (data.stock !== undefined && data.stock !== null) {
-        payload.stock = data.stock;
-      }
-
-      if (data.labelId) {
-        payload.labelId = Number(data.labelId);
-      }
-
+      if (data.price != null) payload.price = Number(data.price).toFixed(2);
+      if (data.stock != null) payload.stock = data.stock;
+      if (data.labelId) payload.labelId = Number(data.labelId);
       if (data.tags && data.tags.length > 0) {
-        payload.tags = data.tags;
+        payload.labelIds = data.tags.map((id) => Number(id));
       }
-
       await apiRequest("Products", {
         method: "POST",
         body: JSON.stringify(payload),
@@ -90,13 +70,12 @@ export default function ProductForm() {
       showToast({
         type: "success",
         title: "Produto cadastrado!",
-        description: "Os dados do produto foram salvos com sucesso.",
+        description: "Dados salvos com sucesso.",
       });
-
       reset();
       setPhotoResident(null);
     } catch (err: any) {
-      console.error("Erro ao cadastrar:", err);
+      console.error(err);
       showToast({
         type: "error",
         title: "Erro ao cadastrar produto",
@@ -118,14 +97,13 @@ export default function ProductForm() {
   if (!authorized) return null;
 
   return (
-    <div className="space-y-6 p-4">
+    <div className="space-y-6 p-4 relative">
       {loading && (
         <div className="absolute inset-0 bg-background bg-opacity-50 flex items-center justify-center z-10">
           <div className="w-12 h-12 border-4 border-gray-200 rounded-full animate-spin" />
         </div>
       )}
 
-      {/* Cabeçalho */}
       <div className="text-center md:text-left mx-6">
         <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-2">
           Cadastro de Produto
@@ -135,9 +113,7 @@ export default function ProductForm() {
         </p>
       </div>
 
-      {/* SectionPhotos + Form */}
       <div className="flex gap-4">
-        {/* SectionPhotos à esquerda */}
         <div className="flex w-1/2 px-4">
           <SectionPhotos
             photoResident={photoResident}
@@ -145,7 +121,6 @@ export default function ProductForm() {
           />
         </div>
 
-        {/* Formulário à direita */}
         <div className="w-1/2 flex flex-col space-y-4">
           {/* Nome */}
           <div className="flex flex-col space-y-2">
@@ -168,24 +143,30 @@ export default function ProductForm() {
             <Controller
               control={control}
               name="price"
-              render={({ field }) => (
-                <Input
-                  id="price"
-                  placeholder="R$ 0,00"
-                  type="text"
-                  value={
-                    field.value
-                      ? new Intl.NumberFormat("pt-BR", {
-                          style: "currency",
-                          currency: "BRL",
-                        }).format(field.value)
-                      : ""
-                  }
-                  onChange={(e) =>
-                    field.onChange(formatPriceInput(e.target.value))
-                  }
-                />
-              )}
+              render={({ field }) => {
+                const handleChange = (
+                  e: React.ChangeEvent<HTMLInputElement>,
+                ) => {
+                  const numeric = e.target.value.replace(/\D/g, "");
+                  field.onChange(numeric ? Number(numeric) / 100 : undefined);
+                };
+
+                const displayValue = field.value
+                  ? new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format(field.value)
+                  : "";
+
+                return (
+                  <Input
+                    id="price"
+                    value={displayValue}
+                    onChange={handleChange}
+                    placeholder="R$ 0,00"
+                  />
+                );
+              }}
             />
             {errors.price && (
               <span className="text-red-600 text-sm">
@@ -218,12 +199,12 @@ export default function ProductForm() {
 
           {/* Tags */}
           <div className="flex flex-col space-y-2">
-            <Label htmlFor="labelId">Tags</Label>
+            <Label htmlFor="tags">Tags</Label>
             <MultipleSelect
               fetchItems={getLabels}
               createItem={postLabel}
               labelKey="name"
-              valueKey="name"
+              valueKey="id"
               multiple
               value={(watch("tags") ?? []).map(String)}
               onChange={(val) =>
@@ -232,7 +213,7 @@ export default function ProductForm() {
                   Array.isArray(val) ? val.map(String) : [String(val)],
                 )
               }
-              placeholder="Selecione ou crie tags (nomes)"
+              placeholder="Selecione ou crie tags"
             />
           </div>
 
@@ -283,7 +264,6 @@ export default function ProductForm() {
         </div>
       </div>
 
-      {/* Botão salvar */}
       <div className="flex justify-end">
         <Button
           onClick={handleSubmit(onSubmit)}
