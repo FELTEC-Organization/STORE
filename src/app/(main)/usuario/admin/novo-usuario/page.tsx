@@ -19,11 +19,7 @@ import {
 import { useRouter } from "next/navigation";
 import { createUser, CreateUserPayload } from "./services/createUser.services";
 
-type TabDatasProps = {
-    onDataFilled?: (data: TCreateProductSchema) => void;
-};
-
-export default function NewUser({ onDataFilled }: TabDatasProps) {
+export default function NewUser() {
     const [authorized, setAuthorized] = useState(false);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
@@ -63,9 +59,7 @@ export default function NewUser({ onDataFilled }: TabDatasProps) {
                 description: "Os dados do usuário foram salvos.",
             });
 
-            onDataFilled?.(data);
             reset();
-
             router.push("lista-usuarios");
         } catch (err) {
             showToast({
