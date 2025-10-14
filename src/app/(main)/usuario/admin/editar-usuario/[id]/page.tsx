@@ -30,7 +30,7 @@ export default function EditUser() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState<User | null>(null);
-    const [photoResident, setPhotoResident] = useState<string | null>(null);
+    const [photo, setPhoto] = useState<string | null>(null);
 
     const params = useParams();
     const id = Number(params.id);
@@ -141,8 +141,8 @@ export default function EditUser() {
                         {/* SectionPhotos à esquerda */}
                         <div className="w-1/2 px-4">
                             <SectionPhotos
-                                photoResident={photoResident}
-                                setPhotoResident={setPhotoResident}
+                                photo={photo}
+                                setPhoto={setPhoto}
                             />
                         </div>
 

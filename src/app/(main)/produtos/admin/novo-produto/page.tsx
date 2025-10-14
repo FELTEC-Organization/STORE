@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Save } from "lucide-react";
 import SectionPhotos from "@/components/UploadPhotos";
-import { MultipleSelect } from "./MultipleSelect";
+import { MultipleSelect } from "@/components/MultipleSelect";
 import { apiRequest } from "@/services/api";
 import { getCategories, postCategory } from "@/services/categories";
 import { getLabels, postLabel } from "@/services/labels";
@@ -22,7 +22,7 @@ export default function ProductForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [authorized, setAuthorized] = useState(false);
-  const [photoResident, setPhotoResident] = useState<string | null>(null);
+  const [photo, setPhoto] = useState<string | null>(null);
 
   const {
     control,
@@ -53,7 +53,7 @@ export default function ProductForm() {
         name: data.name,
         description: data.description || "",
         categoryId: Number(data.categoryId),
-        imageUrl: photoResident ?? null,
+        imageUrl: photo ?? null,
       };
 
       if (data.price != null) payload.price = Number(data.price).toFixed(2);
@@ -73,7 +73,8 @@ export default function ProductForm() {
         description: "Dados salvos com sucesso.",
       });
       reset();
-      setPhotoResident(null);
+      setPhoto(null);
+      router.push("lista-produtos");
     } catch (err: any) {
       console.error(err);
       showToast({
@@ -86,6 +87,7 @@ export default function ProductForm() {
     }
   };
 
+  // Verifica autorização
   useEffect(() => {
     const userData = localStorage.getItem("@NPG-auth-user-data");
     if (!userData) return router.push("/not-found");
@@ -114,13 +116,15 @@ export default function ProductForm() {
       </div>
 
       <div className="flex gap-4">
+        {/* Imagem */}
         <div className="flex w-1/2 px-4">
           <SectionPhotos
-            photoResident={photoResident}
-            setPhotoResident={setPhotoResident}
+            photo={photo}
+            setPhoto={setPhoto}
           />
         </div>
 
+        {/* Formulário */}
         <div className="w-1/2 flex flex-col space-y-4">
           {/* Nome */}
           <div className="flex flex-col space-y-2">
@@ -264,11 +268,12 @@ export default function ProductForm() {
         </div>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end pt-4">
         <Button
           onClick={handleSubmit(onSubmit)}
           disabled={loading}
           variant="sunset"
+          className="min-w-[160px] font-semibold"
         >
           <Save className="mr-2" />
           {loading ? "Salvando..." : "Salvar"}

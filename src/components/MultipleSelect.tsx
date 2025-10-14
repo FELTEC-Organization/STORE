@@ -33,7 +33,7 @@ export interface MultipleSelectProps<T> {
 export function MultipleSelect<T extends Record<string, any>>({
   value,
   onChange,
-  placeholder = "Select or create...",
+  placeholder = "Selecione ou crie...",
   single = false,
   multiple = false,
   fetchItems,
@@ -46,7 +46,7 @@ export function MultipleSelect<T extends Record<string, any>>({
   const [inputValue, setInputValue] = useState("");
   const fetched = useRef(false);
 
-  // 🔹 1. Carrega os itens automaticamente na montagem (não apenas quando abre)
+  // 1. Carrega os itens automaticamente na montagem (não apenas quando abre)
   useEffect(() => {
     if (fetched.current) return;
     fetched.current = true;
@@ -90,7 +90,7 @@ export function MultipleSelect<T extends Record<string, any>>({
     }
   };
 
-  // 🔹 2. Atualiza labels quando os itens ou valores mudam
+  // 2. Atualiza labels quando os itens ou valores mudam
   const displayValue = (() => {
     if (!items.length) return placeholder;
     if (single) {
@@ -106,7 +106,7 @@ export function MultipleSelect<T extends Record<string, any>>({
     }
   })();
 
-  // 🔹 3. Quando o valor muda externamente, tenta sincronizar novamente
+  // 3. Quando o valor muda externamente, tenta sincronizar novamente
   useEffect(() => {
     if (!fetched.current) return;
     if (Array.isArray(value) && multiple) setItems((prev) => [...prev]);
@@ -118,7 +118,7 @@ export function MultipleSelect<T extends Record<string, any>>({
         <Button
           variant="outline"
           className={cn(
-            "w-full justify-between px-3 py-2 text-sm flex items-center",
+            "!font-normal w-full data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground !shadow-md focus-visible:border-sunset focus-visible:ring-sunset/70 focus-visible:ring-[2px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex items-center justify-between gap-2 rounded-md border bg-muted px-3 py-2 text-sm whitespace-nowrap transition-[color,box-shadow] outline-none disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
           )}
         >
           {displayValue}
@@ -131,10 +131,10 @@ export function MultipleSelect<T extends Record<string, any>>({
           <CommandInput
             value={inputValue}
             onValueChange={setInputValue}
-            placeholder="Search..."
+            placeholder="Buscar..."
           />
           <CommandList>
-            <CommandEmpty>No items found.</CommandEmpty>
+            <CommandEmpty>Nenhum item encontrado.</CommandEmpty>
             <CommandGroup>
               {items.map((item) => {
                 const key = String(item[valueKey]);
@@ -168,7 +168,7 @@ export function MultipleSelect<T extends Record<string, any>>({
                   value={inputValue}
                 >
                   <PlusCircle className="mr-2 h-4 w-4" />
-                  Create {inputValue}
+                  Criar {inputValue}
                 </CommandItem>
               )}
           </CommandList>

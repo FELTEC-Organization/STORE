@@ -2,6 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { RoutesActionsCell } from "./data-table-actions";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ImageOff } from "lucide-react";
 
 // function t(text: string) {
 // 	const { t } = useTranslation();
@@ -10,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 const headerClass = "ml-4 bg-gradient-to-r from-orange-400 via-pink-500 to-red-500 text-white";
 
 export const getColumns = (onRefresh: () => void): ColumnDef<any>[] => [
-  
+
   // Seleção de linhas
   {
     id: "select",
@@ -35,6 +36,7 @@ export const getColumns = (onRefresh: () => void): ColumnDef<any>[] => [
     enableSorting: false,
     enableHiding: false,
   },
+  
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -82,7 +84,7 @@ export const getColumns = (onRefresh: () => void): ColumnDef<any>[] => [
       <RoutesActionsCell
         row={row}
         onRefresh={onRefresh}
-        // disableActions={disabledActions}
+      // disableActions={disabledActions}
       />
     ),
   },

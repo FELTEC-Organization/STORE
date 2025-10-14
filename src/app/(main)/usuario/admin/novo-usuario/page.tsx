@@ -23,7 +23,7 @@ export default function NewUser() {
     const [authorized, setAuthorized] = useState(false);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
-    const [photoResident, setPhotoResident] = useState<string | null>(null);
+    const [photo, setPhoto] = useState<string | null>(null);
 
     const {
         register,
@@ -121,8 +121,8 @@ export default function NewUser() {
                         {/* SectionPhotos à esquerda */}
                         <div className="flex w-1/2 px-4">
                             <SectionPhotos
-                                photoResident={photoResident}
-                                setPhotoResident={setPhotoResident}
+                                photo={photo}
+                                setPhoto={setPhoto}
                             />
                         </div>
 

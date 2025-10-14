@@ -22,8 +22,8 @@ import Webcam from "react-webcam";
 
 // Tipos das props
 type SectionPhotosProps = {
-  photoResident: string | null;
-  setPhotoResident: (photo: string | null) => void;
+  photo: string | null;
+  setPhoto: (photo: string | null) => void;
 };
 
 // Componente genérico de conteúdo da foto
@@ -145,22 +145,22 @@ function PhotoContent({
 }
 
 export default function SectionPhotos({
-  photoResident,
-  setPhotoResident,
+  photo,
+  setPhoto,
 }: SectionPhotosProps) {
   const [open, setOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState<string | null>(photoResident);
+  const [previewImage, setPreviewImage] = useState<string | null>(photo);
 
   const handleSave = (image: string) => {
     const displayImage = image.startsWith("data:") ? image : `data:image/jpeg;base64,${image}`;
-    setPhotoResident(displayImage);
+    setPhoto(displayImage);
     setOpen(false);
   };
 
   return (
     <>
       {/* Avatar + botão de alterar */}
-      <PhotoContent initialImage={photoResident} onSave={setPhotoResident} />
+      <PhotoContent initialImage={photo} onSave={setPhoto} />
 
       {/* Modal caso queira adicionar webcam/upload maior */}
       <Dialog open={open} onOpenChange={(isOpen) => setOpen(isOpen)}>

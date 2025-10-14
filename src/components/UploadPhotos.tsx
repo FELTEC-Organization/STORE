@@ -20,8 +20,8 @@ import Webcam from "react-webcam";
 
 // Tipos das props
 type SectionPhotosProps = {
-  photoResident: string | null;
-  setPhotoResident: (photo: string | null) => void;
+  photo: string | null;
+  setPhoto: (photo: string | null) => void;
 };
 
 type PhotoContentProps = {
@@ -209,17 +209,15 @@ function PhotoContent({
 // COMPONENTE PRINCIPAL
 // ==========================
 export default function SectionPhotos({
-  photoResident,
-  setPhotoResident,
+  photo,
+  setPhoto,
 }: SectionPhotosProps) {
-  const [modalType, setModalType] = useState<"resident" | null>(null);
   const [open, setOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   // Abre modal
-  const openModal = (type: "resident") => {
-    setModalType(type);
-    setPreviewImage(photoResident);
+  const openModal = () => {
+    setPreviewImage(photo);
     setOpen(true);
   };
 
@@ -232,7 +230,7 @@ export default function SectionPhotos({
         ? `data:image/jpeg;base64,${image}`
         : null;
 
-    if (modalType === "resident") setPhotoResident(displayImage);
+    setPhoto(displayImage);
     setOpen(false);
   };
 
@@ -244,7 +242,7 @@ export default function SectionPhotos({
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64String = reader.result as string;
-      setPhotoResident(base64String);
+      setPhoto(base64String);
     };
     reader.readAsDataURL(file);
   };
@@ -261,13 +259,13 @@ export default function SectionPhotos({
           className="flex-1 flex flex-col justify-center items-center outline bg-muted dark:bg-zinc-900 
           dark:hover:bg-zinc-800 transition-colors duration-200 overflow-hidden
           text-black dark:text-white hover:bg-white h-full min-h-96 w-96 relative"
-          onClick={() => openModal("resident")}
+          onClick={() => openModal()}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
-          {photoResident ? (
+          {photo ? (
             <img
-              src={photoResident}
+              src={photo}
               alt="Foto"
               className="rounded w-96 h-96 object-cover"
             />
@@ -287,20 +285,12 @@ export default function SectionPhotos({
             <DialogTitle className="text-xl">Carregar foto</DialogTitle>
           </DialogHeader>
 
-          {modalType && (
             <PhotoContent
-              icon={
-                modalType === "resident" ? (
-                  <ImageUp className="w-6 h-6 text-muted-foreground" />
-                ) : (
-                  <FileLock2 className="w-6 h-6 text-muted-foreground" />
-                )
-              }
+              icon={<ImageUp className="w-6 h-6 text-muted-foreground" />}
               placeholderText="Foto"
               initialImage={previewImage}
               onSave={setPreviewImage}
             />
-          )}
 
           <DialogFooter className="mt-5">
             <Button onClick={() => setOpen(false)}>

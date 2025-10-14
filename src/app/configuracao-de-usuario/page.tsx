@@ -28,7 +28,7 @@ export default function ConfiguracaoDeUsuario() {
     <div className="flex flex-col items-center min-h-screen bg-muted py-10">
       {/* Upload de Foto */}
       <div className="flex flex-col items-center mb-6">
-        <SectionPhotos photoResident={photo} setPhotoResident={setPhoto} />
+        <SectionPhotos photo={photo} setPhoto={setPhoto} />
       </div>
 
       {/* Card Principal */}

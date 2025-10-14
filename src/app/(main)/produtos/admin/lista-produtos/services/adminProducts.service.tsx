@@ -54,6 +54,7 @@ export async function fetchProducts(params?: {
       price: p.price,
       stock: p.stock,
       category: p.category?.name || "-",
+      imageUrl: p.imageUrl,
     })),
     currentPage: data.page,
     pageSize: data.pageSize,

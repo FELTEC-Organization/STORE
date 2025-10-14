@@ -5,13 +5,13 @@ import { useRouter, useParams } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Label as LabelType } from "./types";
+import { Label as LabelType } from "./types/editProduct";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SectionPhotos from "@/components/UploadPhotos";
 import { Save } from "lucide-react";
-import { MultipleSelect } from "../../novo-produto/MultipleSelect";
+import { MultipleSelect } from "@/components/MultipleSelect";
 import { getCategories, postCategory } from "@/services/categories";
 import { getLabels, postLabel } from "@/services/labels";
 import { showToast } from "@/components/toast/showToast";
@@ -29,7 +29,7 @@ export default function EditProduct() {
 
   const [loading, setLoading] = useState(false);
   const [authorized, setAuthorized] = useState(false);
-  const [photoResident, setPhotoResident] = useState<string | null>(null);
+  const [photo, setPhoto] = useState<string | null>(null);
   const [productData, setProductData] = useState<Product | null>(null);
 
   const {
@@ -65,7 +65,7 @@ export default function EditProduct() {
           ? `data:image/jpeg;base64,${product.imageUrl}`
           : null;
 
-        setPhotoResident(imageWithPrefix);
+        setPhoto(imageWithPrefix);
         reset({
           name: product.name,
           description: product.description ?? "",
@@ -90,8 +90,8 @@ export default function EditProduct() {
     try {
       setLoading(true);
 
-      const imageForBackend = photoResident
-        ? photoResident.replace(/^data:image\/[a-z]+;base64,/, "")
+      const imageForBackend = photo
+        ? photo.replace(/^data:image\/[a-z]+;base64,/, "")
         : null;
 
       const labels: LabelType[] = (data.tags ?? []).map((id) => ({
@@ -135,7 +135,7 @@ export default function EditProduct() {
   return (
     <div className="space-y-6 p-4">
       <div className="text-center md:text-left mx-6">
-        <h1 className="text-3xl font-extrabold mb-2 text-gray-700">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-2">
           Editar Produto
         </h1>
         <p className="text-sm text-sunset">
@@ -143,17 +143,18 @@ export default function EditProduct() {
         </p>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex gap-4">
         {/* Imagem */}
         <div className="flex w-1/2 px-4">
           <SectionPhotos
-            photoResident={photoResident}
-            setPhotoResident={setPhotoResident}
+            photo={photo}
+            setPhoto={setPhoto}
           />
         </div>
 
         {/* Formulário */}
-        <div className="flex-1 space-y-4">
+        <div className="w-1/2 flex flex-col space-y-4">
+          {/* Nome */}
           <div className="flex flex-col space-y-2">
             <Label htmlFor="name">Nome do Produto</Label>
             <Input id="name" {...register("name")} />
@@ -164,6 +165,7 @@ export default function EditProduct() {
             )}
           </div>
 
+          {/* Preço */}
           <div className="flex flex-col space-y-2">
             <Label htmlFor="price">Preço</Label>
             <Controller
@@ -266,7 +268,7 @@ export default function EditProduct() {
           variant="sunset"
           className="min-w-[160px] font-semibold"
         >
-          <Save className="mr-2 h-5 w-5" />
+          <Save className="mr-2" />
           {loading ? "Salvando..." : "Salvar"}
         </Button>
       </div>
