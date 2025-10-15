@@ -1,11 +1,11 @@
 "use client";
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { MessageCircle } from 'lucide-react';
-import { Product } from '@/data/products';
-import { formatPrice, getWhatsAppUrl } from '@/lib/filters';
-import { siteConfig } from '@/config/site';
-import { motion } from 'framer-motion';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { MessageCircle } from "lucide-react";
+import { Product } from "@/data/products";
+import { formatPrice, getWhatsAppUrl } from "@/lib/filters";
+import { siteConfig } from "@/config/site";
+import { motion } from "framer-motion";
 
 interface ProductCardProps {
   product: Product;
@@ -14,7 +14,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const handleWhatsApp = () => {
     const url = getWhatsAppUrl(product, siteConfig.contact.whatsapp);
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
 
   return (
@@ -27,7 +27,12 @@ export function ProductCard({ product }: ProductCardProps) {
         scale: 1.03,
         y: -6,
         boxShadow: "0 15px 35px var(--color-sunset-dark)",
-        transition: { duration: 0.25, type: "spring", stiffness: 200, damping: 20 },
+        transition: {
+          duration: 0.25,
+          type: "spring",
+          stiffness: 200,
+          damping: 20,
+        },
       }}
       className="group relative bg-card border border-border/50 rounded-2xl overflow-hidden shadow-card transition-all duration-300"
     >
@@ -43,15 +48,23 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Stock Badge */}
         <div className="absolute top-3 right-3">
-          <Badge variant={product.inStock ? 'secondary' : 'destructive'} className="text-xs">
-            {product.inStock ? 'Em estoque' : 'Esgotado'}
+          <Badge
+            variant={product.stock > 0 ? "secondary" : "destructive"}
+            className="text-xs"
+          >
+            {product.stock > 0 ? "Em estoque" : "Esgotado"}
           </Badge>
         </div>
 
         {/* Category Badge */}
         <div className="absolute top-3 left-3">
-          <Badge variant="outline" className="text-xs bg-background/80 backdrop-blur-sm">
-            {product.category}
+          <Badge
+            variant="outline"
+            className="text-xs bg-background/80 backdrop-blur-sm"
+          >
+            {typeof product.category === "object"
+              ? product.category?.name
+              : product.category || "Sem categoria"}
           </Badge>
         </div>
       </div>
@@ -68,9 +81,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Tags */}
         <div className="flex flex-wrap gap-1 mb-4">
-          {product.tags.slice(0, 3).map((tag) => (
-            <Badge key={tag} variant="secondary" className="text-xs">
-              {tag}
+          {product.tags?.slice(0, 3).map((tag, i) => (
+            <Badge key={i} variant="secondary" className="text-xs">
+              {typeof tag === "string" ? tag : String(tag)}
             </Badge>
           ))}
         </div>
@@ -83,12 +96,12 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* WhatsApp Button */}
         <Button
           onClick={handleWhatsApp}
-          disabled={!product.inStock}
+          disabled={product.stock <= 0}
           className="w-full"
-          variant={product.inStock ? 'default' : 'secondary'}
+          variant={product.stock > 0 ? "default" : "secondary"}
         >
           <MessageCircle className="mr-2 h-4 w-4" />
-          {product.inStock ? 'Chamar no WhatsApp' : 'Produto Esgotado'}
+          {product.stock > 0 ? "Chamar no WhatsApp" : "Produto Esgotado"}
         </Button>
       </div>
     </motion.div>
