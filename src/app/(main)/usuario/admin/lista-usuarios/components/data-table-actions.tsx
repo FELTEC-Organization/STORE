@@ -9,7 +9,15 @@ import {
 import { useRouter } from "next/navigation";
 import { deleteUser } from "../services/listUser.services";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
 export function RoutesActionsCell({
@@ -31,7 +39,7 @@ export function RoutesActionsCell({
 			showToast({
 				type: "error",
 				title: "Algo deu errado",
-				description: (String(resp.errors)),
+				description: String(resp.errors),
 			});
 			return;
 		}
@@ -55,9 +63,7 @@ export function RoutesActionsCell({
 						variant="ghost"
 						size="icon"
 						className="hover:text-nc-base-400"
-						onClick={() =>
-							router.push(`editar-usuario/${row.original.id}`)
-						}
+						onClick={() => router.push(`editar-usuario/${row.original.id}`)}
 					>
 						<SquarePen />
 					</Button>
@@ -85,7 +91,7 @@ export function RoutesActionsCell({
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>
-							Tem certeza que deseja deletar este produto?
+							Tem certeza que deseja deletar este usuário?
 						</DialogTitle>
 					</DialogHeader>
 
@@ -93,10 +99,7 @@ export function RoutesActionsCell({
 						<Button variant="outline" onClick={() => setOpen(false)}>
 							Cancelar
 						</Button>
-						<Button
-							onClick={handleDeleteAction}
-							variant="destructive"
-						>
+						<Button onClick={handleDeleteAction} variant="destructive">
 							Deletar
 						</Button>
 					</DialogFooter>
