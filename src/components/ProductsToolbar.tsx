@@ -52,6 +52,7 @@ export function ProductsToolbar({
   const [categoryMap, setCategoryMap] = useState<Record<number, string>>({});
   const [localSort, setLocalSort] = useState(filters.sortBy || "name-asc");
   const [onlyInStock, setOnlyInStock] = useState(filters.onlyInStock || false);
+  const categoryOptions = [{ id: 0, name: "Sem categoria" }, ...categories];
 
   useEffect(() => {
     fetch(

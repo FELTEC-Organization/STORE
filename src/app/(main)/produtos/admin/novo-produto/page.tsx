@@ -37,7 +37,7 @@ export default function ProductForm() {
     defaultValues: {
       name: "",
       price: undefined,
-      categoryId: 0,
+      categoryId: undefined,
       labelId: undefined,
       stock: undefined,
       description: "",
@@ -52,13 +52,14 @@ export default function ProductForm() {
       const payload: any = {
         name: data.name,
         description: data.description || "",
-        categoryId: Number(data.categoryId),
+        categoryId: data.categoryId ? Number(data.categoryId) : null,
         imageUrl: photo ?? null,
       };
 
       if (data.price != null) payload.price = Number(data.price).toFixed(2);
       if (data.stock != null) payload.stock = data.stock;
       if (data.labelId) payload.labelId = Number(data.labelId);
+      if (data.categoryId) payload.categoryId = Number(data.categoryId);
       if (data.tags && data.tags.length > 0) {
         payload.labelIds = data.tags.map((id) => Number(id));
       }
@@ -118,10 +119,7 @@ export default function ProductForm() {
       <div className="flex gap-4">
         {/* Imagem */}
         <div className="flex w-1/2 px-4">
-          <SectionPhotos
-            photo={photo}
-            setPhoto={setPhoto}
-          />
+          <SectionPhotos photo={photo} setPhoto={setPhoto} />
         </div>
 
         {/* Formulário */}
@@ -192,7 +190,7 @@ export default function ProductForm() {
                 watch("categoryId") ? String(watch("categoryId")) : undefined
               }
               onChange={(val) => setValue("categoryId", Number(val))}
-              placeholder="Selecione ou crie uma categoria"
+              placeholder="Selecione ou crie uma categoria (opcional)"
             />
             {errors.categoryId && (
               <span className="text-red-600 text-sm">
@@ -214,7 +212,7 @@ export default function ProductForm() {
               onChange={(val) =>
                 setValue(
                   "tags",
-                  Array.isArray(val) ? val.map(String) : [String(val)]
+                  Array.isArray(val) ? val.map(String) : [String(val)],
                 )
               }
               placeholder="Selecione ou crie tags"
@@ -238,7 +236,7 @@ export default function ProductForm() {
                     field.onChange(
                       e.target.value === ""
                         ? undefined
-                        : parseInt(e.target.value)
+                        : parseInt(e.target.value),
                     )
                   }
                 />

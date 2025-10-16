@@ -11,7 +11,10 @@ export const productSchema = z.object({
 
   categoryId: z
     .number({ message: "Categoria inválida" })
-    .min(1, { message: "Selecione uma categoria" }),
+    .int()
+    .positive()
+    .optional()
+    .nullable(),
 
   labelId: z.number().optional(), // opcional
 
