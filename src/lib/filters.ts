@@ -2,7 +2,7 @@ import { Product } from "@/data/products";
 
 export type FilterOptions = {
   search: string;
-  categories: string[];
+  categories: number[];
   minPrice: number;
   maxPrice: number;
   onlyInStock: boolean;
@@ -28,9 +28,14 @@ export function filterProducts(
 
   // Filtro por categorias
   if (filters.categories.length > 0) {
-    filtered = filtered.filter((product) =>
-      filters.categories.includes(product.category),
-    );
+    filtered = filtered.filter((product) => {
+      const categoryId =
+        typeof product.category === "object"
+          ? product.category.id
+          : undefined; // se for string, ignora
+
+      return categoryId ? filters.categories.includes(categoryId) : false;
+    });
   }
 
   // Filtro por faixa de preço
