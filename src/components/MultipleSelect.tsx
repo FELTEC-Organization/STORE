@@ -18,9 +18,9 @@ import {
 import { PlusCircle, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export interface MultipleSelectProps<T> {
-  value?: string | string[];
-  onChange?: (val: string | string[]) => void;
+export interface MultipleSelectProps<T, V extends string | number> {
+  value?: V | V[];
+  onChange?: (val: V | V[]) => void;
   placeholder?: string;
   single?: boolean;
   multiple?: boolean;
@@ -30,7 +30,10 @@ export interface MultipleSelectProps<T> {
   valueKey: keyof T;
 }
 
-export function MultipleSelect<T extends Record<string, any>>({
+export function MultipleSelect<
+  T extends Record<string, any>,
+  V extends string | number,
+>({
   value,
   onChange,
   placeholder = "Selecione ou crie...",
@@ -40,19 +43,20 @@ export function MultipleSelect<T extends Record<string, any>>({
   createItem,
   labelKey,
   valueKey,
-}: MultipleSelectProps<T>) {
+}: MultipleSelectProps<T, V>) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<T[]>([]);
   const [inputValue, setInputValue] = useState("");
   const fetched = useRef(false);
 
-  // 1. Carrega os itens automaticamente na montagem (não apenas quando abre)
+  // Carrega os itens na montagem
   useEffect(() => {
     if (fetched.current) return;
     fetched.current = true;
     fetchItems().then(setItems).catch(console.error);
   }, [fetchItems]);
 
+  // Criação de item
   const handleCreate = async () => {
     if (!inputValue) return;
     if (
@@ -67,7 +71,7 @@ export function MultipleSelect<T extends Record<string, any>>({
     try {
       const newItem = await createItem(inputValue);
       setItems((prev) => [...prev, newItem]);
-      const newVal = String(newItem[valueKey]);
+      const newVal = newItem[valueKey] as V;
       if (single) onChange?.(newVal);
       if (multiple)
         onChange?.([...(Array.isArray(value) ? value : []), newVal]);
@@ -79,7 +83,8 @@ export function MultipleSelect<T extends Record<string, any>>({
     }
   };
 
-  const handleSelect = (val: string) => {
+  // Seleção de item
+  const handleSelect = (val: V) => {
     if (single) {
       onChange?.(val);
       setOpen(false);
@@ -90,51 +95,40 @@ export function MultipleSelect<T extends Record<string, any>>({
     }
   };
 
-  // 2. Atualiza labels quando os itens ou valores mudam
+  // Display das labels
   const displayValue = (() => {
     if (!items.length) return placeholder;
     if (single) {
       if (!value) return placeholder;
-      const found = items.find((i) => String(i[valueKey]) === String(value));
+      const found = items.find((i) => i[valueKey] === value);
       return found ? String(found[labelKey]) : placeholder;
     } else {
       const vals = Array.isArray(value) ? value : [];
       const labels = items
-        .filter((i) => vals.includes(String(i[valueKey])))
+        .filter((i) => vals.includes(i[valueKey]))
         .map((i) => String(i[labelKey]));
       return labels.length ? labels.join(", ") : placeholder;
     }
   })();
 
-  // 3. Quando o valor muda externamente, tenta sincronizar novamente
-  useEffect(() => {
-    if (!fetched.current) return;
-    if (Array.isArray(value) && multiple) setItems((prev) => [...prev]);
-  }, [value, multiple]);
+  // Botão limpar seleção
+  const handleClear = () => {
+    if (multiple) onChange?.([]);
+    else if (single) onChange?.(null as any);
+  };
 
   return (
     <div className="relative w-full">
-      {/* Botão "x" no lado direito do input */}
-      {multiple && Array.isArray(value) && value.length > 0 && (
+      {/* Botão limpar */}
+      {((multiple && Array.isArray(value) && value.length > 0) ||
+        (single && value)) && (
         <button
           type="button"
-          onClick={() => onChange?.([])}
+          onClick={handleClear}
           className="absolute right-10 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground z-10"
           aria-label="Limpar seleção"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
+          ×
         </button>
       )}
 
@@ -144,7 +138,7 @@ export function MultipleSelect<T extends Record<string, any>>({
             variant="outline"
             className={cn(
               "!font-normal w-full flex justify-between items-center text-left rounded-md border bg-muted px-3 py-2 text-sm shadow-sm hover:bg-muted/70 transition",
-              multiple && Array.isArray(value) && value.length > 0 && "pr-8", // espaço pro X
+              multiple && Array.isArray(value) && value.length > 0 && "pr-8",
             )}
           >
             <span className="truncate">{displayValue}</span>
@@ -169,7 +163,7 @@ export function MultipleSelect<T extends Record<string, any>>({
                       .includes(inputValue.toLowerCase()),
                   )
                   .map((item) => {
-                    const key = String(item[valueKey]);
+                    const key = item[valueKey] as V;
                     const label = String(item[labelKey]);
                     const selected =
                       multiple && Array.isArray(value)
@@ -178,8 +172,8 @@ export function MultipleSelect<T extends Record<string, any>>({
 
                     return (
                       <CommandItem
-                        key={key}
-                        value={key}
+                        key={String(key)}
+                        value={String(key)}
                         onSelect={() => handleSelect(key)}
                         className={cn(
                           "flex justify-between items-center",
@@ -187,32 +181,29 @@ export function MultipleSelect<T extends Record<string, any>>({
                         )}
                       >
                         <span>{label}</span>
-
-                        {/* Botão X para excluir item do banco */}
                         <button
                           type="button"
                           onClick={async (e) => {
                             e.stopPropagation();
-                            try {
-                              const confirmed = confirm(
-                                `Excluir "${label}" permanentemente?`,
-                              );
-                              if (!confirmed) return;
+                            const confirmed = confirm(
+                              `Excluir "${label}" permanentemente?`,
+                            );
+                            if (!confirmed) return;
 
-                              // Detecta automaticamente se está na aba de tags ou categorias
+                            try {
                               const isTag =
                                 window.location.href.includes("tags");
                               const endpoint = isTag
                                 ? "ProductLabels"
                                 : "Categories";
-
                               const token = JSON.parse(
                                 localStorage.getItem("@NPG-auth-user-data") ||
                                   "{}",
                               )?.token;
-
-                              const response = await fetch(
-                                `${process.env.NEXT_PUBLIC_API_URL}/api/${endpoint}/${key}`,
+                              const API_URL =
+                                "https://portfolio-produtos-feltec.onrender.com";
+                              const res = await fetch(
+                                `${API_URL}/api/${endpoint}/${key}`,
                                 {
                                   method: "DELETE",
                                   headers: {
@@ -222,26 +213,28 @@ export function MultipleSelect<T extends Record<string, any>>({
                                 },
                               );
 
-                              if (!response.ok) {
-                                const msg = await response.text();
-                                console.error("Erro ao excluir:", msg);
-                                alert("Erro ao excluir item do banco.");
+                              if (!res.ok) {
+                                const msg = await res.text();
+                                console.error(
+                                  "Erro ao excluir:",
+                                  res.status,
+                                  msg,
+                                );
+                                alert(`Erro ${res.status}: ${msg}`);
                                 return;
                               }
 
-                              // Atualiza a lista local removendo o item
                               setItems((prev) =>
-                                prev.filter((i) => String(i[valueKey]) !== key),
+                                prev.filter((i) => i[valueKey] !== key),
                               );
 
-                              // Remove do input se estiver selecionado
                               if (multiple && Array.isArray(value)) {
                                 onChange?.(value.filter((v) => v !== key));
                               } else if (single && value === key) {
-                                onChange?.("");
+                                onChange?.(null as any);
                               }
 
-                              alert(`"${label}" foi excluído com sucesso!`);
+                              alert(`"${label}" excluído com sucesso!`);
                             } catch (err) {
                               console.error(err);
                               alert("Erro ao excluir item.");
