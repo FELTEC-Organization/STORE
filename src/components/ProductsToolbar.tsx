@@ -124,9 +124,9 @@ export function ProductsToolbar({
         </Select>
 
         <Button
-          variant="outline"
+          variant="secondary"
           onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 !hover:white"
         >
           <Filter className="h-4 w-4" />
           Filtros

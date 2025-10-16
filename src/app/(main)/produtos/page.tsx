@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductsToolbar } from "@/components/ProductsToolbar";
 import Pagination from "@/components/Pagination";
-import { Footer } from "@/components/Footer";
 import { fetchProducts } from "@/lib/api";
 import { Product } from "@/data/products";
 import { motion } from "framer-motion";
@@ -176,8 +175,6 @@ export default function ProductsPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

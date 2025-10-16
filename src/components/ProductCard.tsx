@@ -71,11 +71,11 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Content */}
       <div className="p-6">
-        <h3 className="font-semibold text-lg text-foreground mb-2 group-hover:text-white transition-colors">
+        <h3 className="font-semibold text-lg text-foreground mb-2 dark:group-hover:text-white transition-colors">
           {product.name}
         </h3>
 
-        <p className="text-sm text-muted-foreground mb-3 line-clamp-2 group-hover:text-white/90 transition-colors">
+        <p className="text-sm text-muted-foreground mb-3 line-clamp-2 dark:group-hover:text-white/90 transition-colors">
           {product.description}
         </p>
 
@@ -89,7 +89,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Price */}
-        <div className="text-2xl font-bold text-primary mb-4 group-hover:text-white transition-colors">
+        <div className="text-2xl font-bold text-primary mb-4 dark:group-hover:text-white transition-colors">
           {formatPrice(product.price)}
         </div>
 
