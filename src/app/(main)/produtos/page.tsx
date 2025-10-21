@@ -149,15 +149,6 @@ export default function ProductsPage() {
               activeFilters={activeFilters}
               onRemoveFilter={handleRemoveFilter}
               totalResults={total}
-              onTagDeleted={() => {
-                setLoading(true);
-                fetchProducts(currentPage, ITEMS_PER_PAGE, filters)
-                  .then((res) => {
-                    setProducts(res.items);
-                    setTotal(res.totalItems);
-                  })
-                  .finally(() => setLoading(false));
-              }}
             />
 
             {loading ? (
