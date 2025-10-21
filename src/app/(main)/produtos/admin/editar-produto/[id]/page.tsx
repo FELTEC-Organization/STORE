@@ -100,7 +100,9 @@ export default function EditProduct() {
   }, [authorized, id, reset]);
 
   // 🔹 Envio do formulário
-  const onSubmit = async (data: any /* usando any aqui evita incompatibilidade no handleSubmit */) => {
+  const onSubmit = async (
+    data: any /* usando any aqui evita incompatibilidade no handleSubmit */,
+  ) => {
     try {
       setLoading(true);
 
@@ -226,7 +228,9 @@ export default function EditProduct() {
               value={
                 watch("categoryId") ? String(watch("categoryId")) : undefined
               }
-              onChange={(val) => setValue("categoryId", val ? Number(val) : null)}
+              onChange={(val) =>
+                setValue("categoryId", val ? Number(val) : null)
+              }
               placeholder="Selecione ou crie uma categoria"
             />
           </div>
@@ -235,7 +239,7 @@ export default function EditProduct() {
           <div className="flex flex-col space-y-2">
             <Label htmlFor="labelIds">Tags</Label>
             <MultipleSelect
-              key={productData?.id || "new"}
+              key={`tags-${productData?.id ?? "new"}`}
               fetchItems={getLabels}
               createItem={postLabel}
               labelKey="name"
@@ -290,4 +294,3 @@ export default function EditProduct() {
     </div>
   );
 }
-

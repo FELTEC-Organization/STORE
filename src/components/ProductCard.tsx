@@ -86,12 +86,36 @@ export function ProductCard({ product }: ProductCardProps) {
         </p>
 
         {/* Tags */}
+        {/* Tags */}
         <div className="flex flex-wrap gap-1 mb-4">
-          {product.tags?.slice(0, 3).map((tag, i) => (
-            <Badge key={i} variant="secondary" className="text-xs">
-              {typeof tag === "string" ? tag : String(tag)}
+          {product.tags?.length ? (
+            product.tags.slice(0, 3).map((tag: any, i: number) => {
+              // Se vier objeto { id, name }
+              if (typeof tag === "object" && tag?.name) {
+                return (
+                  <Badge key={i} variant="secondary" className="text-xs">
+                    {tag.name}
+                  </Badge>
+                );
+              }
+
+              // Se vier string
+              if (typeof tag === "string") {
+                return (
+                  <Badge key={i} variant="secondary" className="text-xs">
+                    {tag}
+                  </Badge>
+                );
+              }
+
+              // Se vier número (label excluída)
+              return null;
+            })
+          ) : (
+            <Badge variant="outline" className="hidden text-xs opacity-70">
+              Sem tags
             </Badge>
-          ))}
+          )}
         </div>
 
         {/* Preço */}

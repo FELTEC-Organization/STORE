@@ -50,10 +50,11 @@ export function ProductsToolbar({
   const [localSearch, setLocalSearch] = useState(filters.search || "");
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoryMap, setCategoryMap] = useState<Record<number, string>>({});
+  const [labelMap, setLabelMap] = useState<Record<string, string>>({});
   const [localSort, setLocalSort] = useState(filters.sortBy || "name-asc");
   const [onlyInStock, setOnlyInStock] = useState(filters.onlyInStock || false);
-  const categoryOptions = [{ id: 0, name: "Sem categoria" }, ...categories];
 
+  // Carrega categorias
   useEffect(() => {
     fetch(
       "https://portfolio-produtos-feltec.onrender.com/api/Categories/public",
@@ -66,6 +67,18 @@ export function ProductsToolbar({
         setCategoryMap(map);
       })
       .catch(() => console.error("Erro ao carregar categorias"));
+  }, []);
+
+  // Carrega labels
+  useEffect(() => {
+    fetch("https://portfolio-produtos-feltec.onrender.com/api/ProductLabels")
+      .then((res) => res.json())
+      .then((list: { id: string; name: string }[]) => {
+        const map: Record<string, string> = {};
+        list.forEach((l) => (map[l.id] = l.name));
+        setLabelMap(map);
+      })
+      .catch(() => console.error("Erro ao carregar labels"));
   }, []);
 
   const debouncedSearch = useCallback(
@@ -137,6 +150,7 @@ export function ProductsToolbar({
         </Button>
       </div>
 
+      {/* Filtros Collapsible */}
       <Collapsible open={showFilters} onOpenChange={setShowFilters}>
         <CollapsibleContent>
           <motion.div
@@ -181,6 +195,7 @@ export function ProductsToolbar({
         </CollapsibleContent>
       </Collapsible>
 
+      {/* Resultados e badges */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-sm text-muted-foreground">
@@ -191,9 +206,17 @@ export function ProductsToolbar({
           <AnimatePresence>
             {activeFilters.map((filter) => {
               let label = filter.label;
+
               if (filter.type === "category" && filter.value) {
                 const id = Number(filter.value);
-                label = categoryMap[id] || `Categoria #${id}`;
+                label = categoryMap[id] ?? filter.label ?? "";
+                if (!label) return null;
+              }
+
+              if (filter.type === "label" && filter.value) {
+                const id = filter.value;
+                label = labelMap[id] ?? filter.label ?? "";
+                if (!label) return null;
               }
 
               return (

@@ -29,6 +29,7 @@ export interface MultipleSelectProps<T, V extends string | number> {
   labelKey: keyof T;
   valueKey: keyof T;
   endpointType?: "ProductLabels" | "Categories";
+  onItemDeleted?: (deletedId: V) => void;
 }
 
 export function MultipleSelect<
@@ -45,6 +46,7 @@ export function MultipleSelect<
   labelKey,
   valueKey,
   endpointType,
+  onItemDeleted,
 }: MultipleSelectProps<T, V>) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<T[]>([]);
@@ -107,7 +109,6 @@ export function MultipleSelect<
     }
 
     if (!items || items.length === 0) {
-      // Mostra IDs temporariamente até os nomes carregarem
       return Array.isArray(value) ? value.join(", ") : String(value);
     }
 
@@ -120,8 +121,10 @@ export function MultipleSelect<
     const labels = vals
       .map(
         (v) =>
-          items.find((i) => String(i[valueKey]) === String(v))?.[labelKey] ?? v,
+          items.find((i) => String(i[valueKey]) === String(v))?.[labelKey] ??
+          "",
       )
+      .filter(Boolean)
       .map(String);
 
     return labels.length ? labels.join(", ") : placeholder;
@@ -202,12 +205,18 @@ export function MultipleSelect<
                             );
                             if (!confirmed) return;
 
-                            try {                           
-                              const endpoint = endpointType || (window.location.href.includes("tags") ? "ProductLabels" : "Categories");
+                            try {
+                              const endpoint =
+                                endpointType ||
+                                (window.location.href.includes("tags")
+                                  ? "ProductLabels"
+                                  : "Categories");
+
                               const token = JSON.parse(
                                 localStorage.getItem("@NPG-auth-user-data") ||
                                   "{}",
                               )?.token;
+
                               const API_URL =
                                 "https://portfolio-produtos-feltec.onrender.com";
                               const res = await fetch(
@@ -232,15 +241,31 @@ export function MultipleSelect<
                                 return;
                               }
 
+                              // 🔹 Remove o item da lista local
                               setItems((prev) =>
                                 prev.filter((i) => i[valueKey] !== key),
                               );
 
+                              // 🔹 Limpa valores relacionados
+                              setInputValue(""); // limpa o campo
                               if (multiple && Array.isArray(value)) {
-                                onChange?.(value.filter((v) => v !== key));
+                                const newVal = value.filter(
+                                  (v) => String(v) !== String(key),
+                                );
+                                onChange?.(newVal);
                               } else if (single && value === key) {
                                 onChange?.(null as any);
                               }
+
+                              // 🔹 Força atualização visual (evita exibir IDs)
+                              setTimeout(() => {
+                                fetchItems()
+                                  .then(setItems)
+                                  .catch(console.error);
+                              }, 200);
+
+                              // 🔹 Notifica o componente pai (para atualizar produtos)
+                              onItemDeleted?.(key);
 
                               alert(`"${label}" excluído com sucesso!`);
                             } catch (err) {
