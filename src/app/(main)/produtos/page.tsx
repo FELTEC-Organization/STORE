@@ -53,15 +53,32 @@ export default function ProductsPage() {
 
   // Busca os produtos da API
   useEffect(() => {
+    const updatedFilters = {
+      search: searchParams.get("q") ?? "",
+      categoryIds: searchParams.get("categoria")
+        ? searchParams.get("categoria")!.split(",").map(Number)
+        : [],
+      sortBy:
+        (searchParams.get("ordem") as
+          | "name-asc"
+          | "name-desc"
+          | "price-asc"
+          | "price-desc") ?? "name-asc",
+      onlyInStock: searchParams.get("estoque") === "true",
+    };
+
+    setFilters(updatedFilters);
+    const page = parseInt(searchParams.get("pagina") || "1");
+
     setLoading(true);
-    fetchProducts(currentPage, ITEMS_PER_PAGE, filters)
+    fetchProducts(page, ITEMS_PER_PAGE, updatedFilters)
       .then((res) => {
         setProducts(res.items);
         setTotal(res.totalItems);
       })
-      .catch((err) => console.error(err))
+      .catch(console.error)
       .finally(() => setLoading(false));
-  }, [currentPage, filters]);
+  }, [searchParams]);
 
   const handlePageChange = (page: number) => updateUrlParams(page);
 

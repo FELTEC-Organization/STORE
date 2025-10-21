@@ -17,37 +17,32 @@ export function filterProducts(
 
   // Busca por nome e descrição
   if (filters.search.trim()) {
-    const searchLower = filters.search.toLowerCase().trim();
+    const s = filters.search.toLowerCase();
     filtered = filtered.filter(
-      (product) =>
-        product.name.toLowerCase().includes(searchLower) ||
-        product.description.toLowerCase().includes(searchLower) ||
-        product.tags.some((tag) => tag.toLowerCase().includes(searchLower)),
+      (p) =>
+        p.name.toLowerCase().includes(s) ||
+        p.description?.toLowerCase().includes(s) ||
+        p.tags?.some((tag) => tag.toLowerCase().includes(s)),
     );
   }
 
   // Filtro por categorias
   if (filters.categories.length > 0) {
-    filtered = filtered.filter((product) => {
-      const categoryId =
-        typeof product.category === "object"
-          ? product.category.id
-          : undefined; // se for string, ignora
-
-      return categoryId ? filters.categories.includes(categoryId) : false;
+    filtered = filtered.filter((p) => {
+      const id = typeof p.category === "object" ? p.category?.id : p.categoryId;
+      return id ? filters.categories.includes(id) : false;
     });
   }
 
   // Filtro por faixa de preço
   filtered = filtered.filter(
-    (product) =>
-      product.price >= filters.minPrice && product.price <= filters.maxPrice,
+    (p) =>
+      (p.price ?? 0) >= filters.minPrice && (p.price ?? 0) <= filters.maxPrice,
   );
 
   // Filtro por disponibilidade
-  if (filters.onlyInStock) {
-    filtered = filtered.filter((product) => product.inStock);
-  }
+  if (filters.onlyInStock)
+    filtered = filtered.filter((p) => (p.stock ?? 0) > 0);
 
   // Ordenação
   filtered.sort((a, b) => {
@@ -57,9 +52,9 @@ export function filterProducts(
       case "name-desc":
         return b.name.localeCompare(a.name, "pt-BR");
       case "price-asc":
-        return a.price - b.price;
+        return (a.price ?? 0) - (b.price ?? 0);
       case "price-desc":
-        return b.price - a.price;
+        return (b.price ?? 0) - (a.price ?? 0);
       default:
         return 0;
     }
@@ -68,25 +63,11 @@ export function filterProducts(
   return filtered;
 }
 
-export function formatPrice(price: number): string {
-  if (price == null) return "R$ 0,00";
-  return price.toLocaleString("pt-BR", {
+export function formatPrice(price?: number | null): string {
+  return (price ?? 0).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
-}
-
-export function getPriceRange(products: Product[]): {
-  min: number;
-  max: number;
-} {
-  if (products.length === 0) return { min: 0, max: 1000 };
-
-  const prices = products.map((p) => p.price);
-  return {
-    min: Math.floor(Math.min(...prices)),
-    max: Math.ceil(Math.max(...prices)),
-  };
 }
 
 export function getWhatsAppUrl(

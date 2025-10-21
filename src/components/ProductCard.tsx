@@ -16,6 +16,12 @@ export function ProductCard({ product }: ProductCardProps) {
     const url = getWhatsAppUrl(product, siteConfig.contact.whatsapp);
     window.open(url, "_blank");
   };
+  const stock = product.stock ?? 0;
+  const price = product.price ?? 0;
+  const categoryName =
+    typeof product.category === "object"
+      ? product.category?.name
+      : "Sem categoria";
 
   return (
     <motion.div
@@ -39,20 +45,20 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-muted">
         <motion.img
-          src={product.image}
+          src={product.image ?? "/placeholder.png"}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-300"
           whileHover={{ scale: 1.07 }}
           loading="lazy"
         />
 
-        {/* Stock Badge */}
+        {/* Estoque */}
         <div className="absolute top-3 right-3">
           <Badge
-            variant={product.stock > 0 ? "secondary" : "destructive"}
+            variant={stock > 0 ? "secondary" : "destructive"}
             className="text-xs"
           >
-            {product.stock > 0 ? "Em estoque" : "Esgotado"}
+            {stock > 0 ? "Em estoque" : "Esgotado"}
           </Badge>
         </div>
 
@@ -88,20 +94,20 @@ export function ProductCard({ product }: ProductCardProps) {
           ))}
         </div>
 
-        {/* Price */}
-        <div className="text-2xl font-bold text-primary mb-4 dark:group-hover:text-white transition-colors">
-          {formatPrice(product.price)}
+        {/* Preço */}
+        <div className="text-2xl font-bold text-primary mb-4">
+          {formatPrice(price)}
         </div>
 
-        {/* WhatsApp Button */}
+        {/* WhatsApp */}
         <Button
           onClick={handleWhatsApp}
-          disabled={product.stock <= 0}
+          disabled={stock <= 0}
           className="w-full"
-          variant={product.stock > 0 ? "default" : "secondary"}
+          variant={stock > 0 ? "default" : "secondary"}
         >
           <MessageCircle className="mr-2 h-4 w-4" />
-          {product.stock > 0 ? "Chamar no WhatsApp" : "Produto Esgotado"}
+          {stock > 0 ? "Chamar no WhatsApp" : "Produto Esgotado"}
         </Button>
       </div>
     </motion.div>
