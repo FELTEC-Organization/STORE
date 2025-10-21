@@ -28,6 +28,7 @@ export interface MultipleSelectProps<T, V extends string | number> {
   createItem: (name: string) => Promise<T>;
   labelKey: keyof T;
   valueKey: keyof T;
+  endpointType?: "ProductLabels" | "Categories";
 }
 
 export function MultipleSelect<
@@ -43,20 +44,20 @@ export function MultipleSelect<
   createItem,
   labelKey,
   valueKey,
+  endpointType,
 }: MultipleSelectProps<T, V>) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<T[]>([]);
   const [inputValue, setInputValue] = useState("");
   const fetched = useRef(false);
 
-  // Carrega os itens na montagem
+  // Carrega itens uma vez
   useEffect(() => {
     if (fetched.current) return;
     fetched.current = true;
     fetchItems().then(setItems).catch(console.error);
   }, [fetchItems]);
 
-  // Criação de item
   const handleCreate = async () => {
     if (!inputValue) return;
     if (
@@ -83,7 +84,6 @@ export function MultipleSelect<
     }
   };
 
-  // Seleção de item
   const handleSelect = (val: V) => {
     if (single) {
       onChange?.(val);
@@ -95,27 +95,37 @@ export function MultipleSelect<
     }
   };
 
-  // Display das labels
-  const displayValue = (() => {
-    if (!items.length) return placeholder;
-    if (single) {
-      if (!value) return placeholder;
-      const found = items.find((i) => i[valueKey] === value);
-      return found ? String(found[labelKey]) : placeholder;
-    } else {
-      const vals = Array.isArray(value) ? value : [];
-      const labels = items
-        .filter((i) => vals.includes(i[valueKey]))
-        .map((i) => String(i[labelKey]));
-      return labels.length ? labels.join(", ") : placeholder;
-    }
-  })();
-
-  // Botão limpar seleção
   const handleClear = () => {
     if (multiple) onChange?.([]);
     else if (single) onChange?.(null as any);
   };
+
+  // Memoiza displayValue para atualizar automaticamente
+  const displayValue = React.useMemo(() => {
+    if (!value || (Array.isArray(value) && value.length === 0)) {
+      return placeholder;
+    }
+
+    if (!items || items.length === 0) {
+      // Mostra IDs temporariamente até os nomes carregarem
+      return Array.isArray(value) ? value.join(", ") : String(value);
+    }
+
+    if (single) {
+      const found = items.find((i) => String(i[valueKey]) === String(value));
+      return found ? String(found[labelKey]) : placeholder;
+    }
+
+    const vals = Array.isArray(value) ? value : [value];
+    const labels = vals
+      .map(
+        (v) =>
+          items.find((i) => String(i[valueKey]) === String(v))?.[labelKey] ?? v,
+      )
+      .map(String);
+
+    return labels.length ? labels.join(", ") : placeholder;
+  }, [items, value, single, placeholder, valueKey, labelKey]);
 
   return (
     <div className="relative w-full">
@@ -167,8 +177,8 @@ export function MultipleSelect<
                     const label = String(item[labelKey]);
                     const selected =
                       multiple && Array.isArray(value)
-                        ? value.includes(key)
-                        : value === key;
+                        ? value.map(String).includes(String(key))
+                        : String(value) === String(key);
 
                     return (
                       <CommandItem
@@ -180,7 +190,9 @@ export function MultipleSelect<
                           selected && "bg-muted",
                         )}
                       >
-                        <span>{label}</span>
+                        <span className="flex-1">{label}</span>
+
+                        {/* botão excluir */}
                         <button
                           type="button"
                           onClick={async (e) => {
@@ -190,12 +202,8 @@ export function MultipleSelect<
                             );
                             if (!confirmed) return;
 
-                            try {
-                              const isTag =
-                                window.location.href.includes("tags");
-                              const endpoint = isTag
-                                ? "ProductLabels"
-                                : "Categories";
+                            try {                           
+                              const endpoint = endpointType || (window.location.href.includes("tags") ? "ProductLabels" : "Categories");
                               const token = JSON.parse(
                                 localStorage.getItem("@NPG-auth-user-data") ||
                                   "{}",

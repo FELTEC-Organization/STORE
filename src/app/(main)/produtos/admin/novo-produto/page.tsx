@@ -186,6 +186,7 @@ export default function ProductForm() {
               labelKey="name"
               valueKey="id"
               single
+              endpointType="Categories"
               value={
                 watch("categoryId") ? String(watch("categoryId")) : undefined
               }
@@ -208,6 +209,7 @@ export default function ProductForm() {
               labelKey="name"
               valueKey="id"
               multiple
+              endpointType="ProductLabels"
               value={(watch("tags") ?? []).map(String)}
               onChange={(val) =>
                 setValue(

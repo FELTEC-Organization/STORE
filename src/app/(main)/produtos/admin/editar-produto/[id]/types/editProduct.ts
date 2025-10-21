@@ -11,6 +11,6 @@ export type Product = {
   price?: number;
   stock?: number;
   categoryId: number;
-  labelId?: Label[];
-  tags?: string[];
+  labels?: Label[]; 
+  tags?: string[];  
 };
