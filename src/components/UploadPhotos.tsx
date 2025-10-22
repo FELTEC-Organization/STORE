@@ -12,7 +12,7 @@ import {
   Upload,
   Camera,
   ImageUp,
-  FileLock2,
+  // FileLock2,
   Save,
 } from "lucide-react";
 import { useRef, useState } from "react";

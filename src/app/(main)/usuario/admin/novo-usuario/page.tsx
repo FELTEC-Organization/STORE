@@ -29,7 +29,7 @@ export default function NewUser() {
         register,
         handleSubmit,
         control,
-        setValue,
+        // setValue,
         formState: { errors },
         reset,
     } = useForm<TCreateProductSchema>({

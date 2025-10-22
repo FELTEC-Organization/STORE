@@ -1,15 +1,15 @@
-interface LoginPayload {
-  email: string;
-  password: string;
-}
+// interface LoginPayload {
+//   email: string;
+//   password: string;
+// }
 
-interface LoginResponse {
-  userId: number;
-  name: string;
-  email: string;
-  token: string;
-  refreshToken?: string;
-}
+// interface LoginResponse {
+//   userId: number;
+//   name: string;
+//   email: string;
+//   token: string;
+//   refreshToken?: string;
+// }
 
 // Função que consome o endpoint /api/login
 export async function postLogin(data: { email: string; password: string }) {

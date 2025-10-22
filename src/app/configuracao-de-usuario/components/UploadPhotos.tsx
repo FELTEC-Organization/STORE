@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import {
   X,
-  WebcamIcon,
-  Upload,
+  // WebcamIcon,
+  // Upload,
   Camera,
-  ImageUp,
+  // ImageUp,
   Save,
   User,
 } from "lucide-react";

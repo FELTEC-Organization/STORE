@@ -13,7 +13,7 @@ export default function PasswordRenewPage() {
 		email: string;
 	};
 
-	const { register, handleSubmit, formState: { errors, isValid } } = useForm<TPasswordRenewForm>({
+	const { register, formState: { errors } } = useForm<TPasswordRenewForm>({
 		mode: "onChange",
 	});
 

@@ -8,7 +8,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "./components/data-table";
 import Image from "next/image";
-import { getColumns } from "./components/columns";
+// import { getColumns } from "./components/columns";
 
 export default function ListProducts() {
   const [authorized, setAuthorized] = useState(false);

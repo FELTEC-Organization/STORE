@@ -6,14 +6,14 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuSeparator,
+	// DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
 	ArrowDownIcon,
 	ArrowUpIcon,
 	ChevronsUpDown,
-	EyeOff,
+	// EyeOff,
 } from "lucide-react";
 
 interface DataTableColumnHeaderProps<TData, TValue>

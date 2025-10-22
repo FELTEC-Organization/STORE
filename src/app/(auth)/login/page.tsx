@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useContext, useState, useRef } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/contexts/auth.ctx";
 import { localstorageService } from "@/services/localstorage.service";
@@ -28,9 +28,9 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loginAttempts, setLoginAttempts] = useState(0);
   const [isLoginBlocked, setIsLoginBlocked] = useState(false);
-  const [errorKeyId, setErrorKeyId] = useState(0);
-  const timeoutRef = useRef<number | null>(null);
-  const ERROR_DURATION = isLoginBlocked ? 120000 : 4000;
+  const [errorKeyId] = useState(0);
+  // const timeoutRef = useRef<number | null>(null);
+  // const ERROR_DURATION = isLoginBlocked ? 120000 : 4000;
   const MAX_ATTEMPTS = 5;
 
   const {

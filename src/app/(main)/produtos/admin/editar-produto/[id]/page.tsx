@@ -14,7 +14,7 @@ import { MultipleSelect } from "@/components/MultipleSelect";
 import { getCategories, postCategory } from "@/services/categories";
 import { getLabels, postLabel } from "@/services/labels";
 import { showToast } from "@/components/toast/showToast";
-import { productSchema, TEditProductSchema } from "./schema/schema";
+import { productSchema} from "./schema/schema";
 import {
   getProductById,
   updateProduct,

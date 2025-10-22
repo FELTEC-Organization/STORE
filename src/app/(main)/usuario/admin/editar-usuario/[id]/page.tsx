@@ -26,7 +26,7 @@ type EditUserForm = {
 };
 
 export default function EditUser() {
-    const [authorized, setAuthorized] = useState(false);
+    // const [authorized, setAuthorized] = useState(false);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState<User | null>(null);
