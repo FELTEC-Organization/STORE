@@ -13,9 +13,11 @@ export default function PasswordRenewPage() {
 		email: string;
 	};
 
-	const { register, formState: { errors } } = useForm<TPasswordRenewForm>({
-		mode: "onChange",
-	});
+	const {
+		register,
+		getValues,
+		formState: { errors },
+	} = useForm<TPasswordRenewForm>({ mode: "onChange" });
 
 	const router = useRouter();
 
@@ -27,15 +29,38 @@ export default function PasswordRenewPage() {
 	const [email, setEmail] = useState("");
 
 	// Função de envio de senha temporária (mock)
-	const handleSendTemporaryPassword = () => {
+	const handleSendTemporaryPassword = async () => {
+		const email = getValues("email");
 		if (!email) {
 			triggerError();
 			return;
 		}
 
-		// Aqui você chamaria sua API real para enviar a senha temporária
-		alert(`Senha temporária enviada para ${email}`);
-		setEmail("");
+		try {
+			const res = await fetch(
+				"https://portfolio-produtos-feltec.onrender.com/api/Users/forgot-password",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ email }),
+				},
+			);
+
+			if (!res.ok) {
+				const data = await res.json();
+				alert(data.error || "Erro ao enviar senha temporária");
+				return;
+			}
+
+			const data = await res.json();
+			alert(data.message || `Senha temporária enviada para ${email}`);
+			setEmail("");
+		} catch (err) {
+			console.error(err);
+			alert("Erro de conexão com o servidor");
+		}
 	};
 
 	// Função para exibir alerta de erro
@@ -59,15 +84,14 @@ export default function PasswordRenewPage() {
 						Recuperar senha
 					</h1>
 					<span className="text-nc-base-800 font-semibold text-lg">
-						Informe seu email para receber uma senha temporária de acesso e recuperação de senha.
+						Informe seu email para receber uma senha temporária de acesso e
+						recuperação de senha.
 					</span>
 				</div>
 
 				{/* Input */}
 				<div className="flex flex-col gap-2">
-					<h2 className="font-bold text-lg text-sunset">
-						Email de acesso:
-					</h2>
+					<h2 className="font-bold text-lg text-sunset">Email de acesso:</h2>
 					<AuthInput
 						id="email"
 						label="Email"

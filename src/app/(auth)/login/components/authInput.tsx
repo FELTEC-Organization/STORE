@@ -8,6 +8,8 @@ interface AuthInputProps {
 	placeholder?: string;
 	register?: UseFormRegisterReturn;
 	error?: string;
+	value?: string; 
+	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; 
 }
 
 // region AuthInput
